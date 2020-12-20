@@ -40,7 +40,7 @@ pub   rsa4096/{keyid} [some date] ...
 
 You will need the 8 character long keyId from here
 
-## Running the publish
+## Publishing to staging
 
 Fill in the variables in [gradle properties](gradle.example.properties),
 rename it to `gradle.properties` and run:
@@ -48,3 +48,7 @@ rename it to `gradle.properties` and run:
 ```shell
 ./gradlew publish
 ```
+
+## Promoting
+
+Go to the [repository manager](https://oss.sonatype.org/#stagingRepositories), and release the repository.

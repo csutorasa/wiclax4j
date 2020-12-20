@@ -3,7 +3,32 @@
 This is a pure java implementation to create a generic [Wiclax](https://www.wiclax.com/) server.
 It has no runtime dependencies and is built with Java 8.
 
-## Example
+## How to use
+
+Maven:
+
+```xml
+<project>
+    ...
+    <depencencies>    
+        <dependency>
+            <groupId>com.github.csutorasa.wiclax4j</groupId>
+            <artifactId>wiclax4j</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </depencencies>
+</project>
+```
+
+Gradle:
+
+```groovy
+dependencies {
+    implementation 'com.github.csutorasa.wiclax4j:wiclax4j:1.0.0'
+}
+```
+
+### Example
 
 ```java
 package org.example;
@@ -17,7 +42,7 @@ import com.github.csutorasa.wiclax.WiclaxServerSocket;
 import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 
 public class WiclaxExample {
-    public void example() throws IOException {
+    public static void main(String... args) throws IOException {
         // Create a server socket with port 12345
         WiclaxServerSocket wiclaxServerSocket = new WiclaxServerSocket(12345);
         // Accept a client connection
@@ -37,27 +62,29 @@ public class WiclaxExample {
 }
 ```
 
-## Requests
+## How it works
+
+### Requests
 
 Requests are coming from the client in a `COMMAND [ARGUMENTS]` format.
 All requests, that you would like to handle, need [request handlers](src/main/java/com/github/csutorasa/wiclax/request).
 To create a new handler you need to create a subclass of [WiclaxRequestHandler](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequestHandler.java).
 Overriding the `supports(String command, String data)` allows handling the requests.
 
-### Reader
+#### Reader
 
 To read from clients you can use any implementation of [WiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/WiclaxClientReader.java).
 There is a default implementation [DefaultWiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/DefaultWiclaxClientReader.java),
 but you can customize it by handling the errors correctly.
 As there are no dependencies, there are no logging is included in the project.
 
-## Messages and responses
+### Messages and responses
 
 Messages are not in a strict format, however responses have a similar `RESPONSE` format.
 All [messages and responses](src/main/java/com/github/csutorasa/wiclax/message) need to extend the [WiclaxMessage](src/main/java/com/github/csutorasa/wiclax/message/WiclaxMessage.java).
 To create a new message or response you need to override the `toData()` method and return the text to be sent to the client.
 
-## Clock
+### Clock
 
 Wiclax can synchronize the clock by sending a message to the server.
 The server must accept it as the current time, and show all dates and times according to that time shift.

@@ -43,7 +43,9 @@ publishing {
         mavenJava(MavenPublication) {
             groupId 'com.github.csutorasa.wiclax4j'
             artifactId 'wiclax4j'
-            version '1.0.0'
+            version findProperty('wiclax4j.version')
+
+            from components.java
 
             pom {
                 name = 'Wiclax4j'
