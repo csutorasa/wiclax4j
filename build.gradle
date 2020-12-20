@@ -2,10 +2,8 @@ plugins {
     id 'java'
     id 'groovy'
     id 'maven-publish'
+    id 'signing'
 }
-
-
-group =
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -32,9 +30,18 @@ dependencies {
 }
 
 publishing {
+    repositories {
+        maven {
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username findProperty("nexus.username")
+                password findProperty("nexus.password")
+            }
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
-            groupId 'com.github.csutorasa'
+            groupId 'com.github.csutorasa.wiclax4j'
             artifactId 'wiclax4j'
             version '1.0.0'
 
@@ -52,15 +59,20 @@ publishing {
                     developer {
                         id = 'csutorasa'
                         name = 'Ármin Csutorás'
+                        email = 'csutorasa@gmail.com'
                         organizationUrl = 'https://github.com/csutorasa'
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/csutorasa/wiclax4j.git'
-                    developerConnection = 'scm:git:ssh://github.com/csutorasa/wiclax4j.git'
+                    connection = 'https://github.com/csutorasa/wiclax4j.git'
+                    developerConnection = 'https://github.com/csutorasa/wiclax4j.git'
                     url = 'https://github.com/csutorasa/wiclax4j'
                 }
             }
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
