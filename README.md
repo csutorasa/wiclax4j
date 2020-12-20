@@ -5,28 +5,7 @@ It has no runtime dependencies and is built with Java 8.
 
 ## How to use
 
-Maven:
-
-```xml
-<project>
-    ...
-    <depencencies>    
-        <dependency>
-            <groupId>com.github.csutorasa.wiclax4j</groupId>
-            <artifactId>wiclax4j</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </depencencies>
-</project>
-```
-
-Gradle:
-
-```groovy
-dependencies {
-    implementation 'com.github.csutorasa.wiclax4j:wiclax4j:1.0.0'
-}
-```
+Check the latest version, and import the library as dependency from [here](https://search.maven.org/artifact/com.github.csutorasa.wiclax4j/wiclax4j).
 
 ### Example
 
