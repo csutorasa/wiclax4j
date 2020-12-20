@@ -1,4 +1,4 @@
-# Wiclax4j ![Build wiclax4j](https://github.com/csutorasa/wiclax4j/workflows/Build%20wiclax4j/badge.svg) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.csutorasa.wiclax4j/wiclax4j/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.csutorasa.wiclax4j/wiclax4j)
+# Wiclax4j ![Build wiclax4j](https://github.com/csutorasa/wiclax4j/workflows/Build%20wiclax4j/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/com.github.csutorasa.wiclax4j/wiclax4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.csutorasa.wiclax4j%22%20AND%20a:%22wiclax4j%22)
 
 This is a pure java implementation to create a generic [Wiclax](https://www.wiclax.com/) server.
 It has no runtime dependencies and is built with Java 8.
