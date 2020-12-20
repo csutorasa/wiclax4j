@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'maven-publish'
+}
+
+
+group =
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testImplementation 'org.codehaus.groovy:groovy-all:2.5.12'
+    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
+    testImplementation 'net.bytebuddy:byte-buddy:1.10.18'
+    testImplementation 'org.objenesis:objenesis:3.1'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.github.csutorasa'
+            artifactId 'wiclax4j'
+            version '1.1'
+
+            pom {
+                name = 'Wiclax4j'
+                description = 'This is a pure java generic Wiclax server implementation'
+                url = 'https://www.github.com/'
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'csutorasa'
+                        name = 'Ármin Csutorás'
+                        organizationUrl = 'https://github.com/csutorasa'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/csutorasa/wiclax4j.git'
+                    developerConnection = 'scm:git:ssh://github.com/csutorasa/wiclax4j.git'
+                    url = 'https://github.com/csutorasa/wiclax4j'
+                }
+            }
+        }
+    }
+}
