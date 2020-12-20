@@ -59,7 +59,7 @@ public class WiclaxClientConnection implements Closeable {
      */
     public void send(WiclaxMessage message) throws IOException {
         outputStream.write(message.toData());
-        outputStream.newLine();
+        outputStream.write("\r");
         outputStream.flush();
     }
 
@@ -89,8 +89,8 @@ public class WiclaxClientConnection implements Closeable {
 
     @Override
     public void close() throws IOException {
-        socket.close();
         inputStream.close();
         outputStream.close();
+        socket.close();
     }
 }

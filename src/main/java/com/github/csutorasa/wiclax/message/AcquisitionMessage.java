@@ -21,11 +21,29 @@ import java.time.Instant;
 @EqualsAndHashCode(callSuper = false)
 public class AcquisitionMessage extends WiclaxMessage {
 
+    /**
+     * Chip or bib identifier
+     */
     private String chipId;
+    /**
+     * Detection date and time
+     */
     private Instant detectionTime;
+    /**
+     * Optional device identifier
+     */
     private String deviceId;
+    /**
+     * Optional lap number
+     */
     private Integer lap;
+    /**
+     * Optional transponder battery level
+     */
     private Integer batteryLevel;
+    /**
+     * True if it is a response to rewind request
+     */
     private boolean rewind;
 
     @Override
@@ -33,9 +51,13 @@ public class AcquisitionMessage extends WiclaxMessage {
         return String.join(";",
                 chipId,
                 WiclaxDateFormatters.DATE_TIME_WITH_MILLIS_FORMATTER.format(detectionTime),
-                deviceId,
-                lap == null ? "" : Integer.toString(lap),
-                batteryLevel == null ? "" : Integer.toString(batteryLevel),
+                orEmpty(deviceId),
+                orEmpty(lap),
+                orEmpty(batteryLevel),
                 rewind ? "1" : "0");
+    }
+
+    private String orEmpty(Object obj) {
+        return obj == null ? "" : obj.toString();
     }
 }
