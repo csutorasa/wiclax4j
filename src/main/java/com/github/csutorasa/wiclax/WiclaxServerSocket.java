@@ -14,10 +14,19 @@ public class WiclaxServerSocket implements Closeable {
 
     private final ServerSocket serverSocket;
 
+    /**
+     * Creates a new server socket with the given port
+     * @param port socket port
+     * @throws IOException if the ServerSocket creation fails
+     */
     public WiclaxServerSocket(int port) throws IOException {
         this(new ServerSocket(port));
     }
 
+    /**
+     * Creates a new server socket from an existing socket.
+     * @param serverSocket existing socket
+     */
     public WiclaxServerSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }

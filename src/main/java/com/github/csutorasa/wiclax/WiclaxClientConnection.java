@@ -30,6 +30,12 @@ public class WiclaxClientConnection implements Closeable {
     private final BufferedWriter outputStream;
     private final AtomicBoolean readStarted = new AtomicBoolean(false);
 
+    /**
+     * Creates a new client connection
+     * @param socket client socket
+     * @param clock clock to be used
+     * @throws IOException if the socket or stream throws and exception
+     */
     public WiclaxClientConnection(Socket socket, WiclaxClock clock) throws IOException {
         this.socket = socket;
         this.clock = clock;
@@ -57,12 +63,17 @@ public class WiclaxClientConnection implements Closeable {
         outputStream.flush();
     }
 
+    /**
+     * Gets if the read is started in Wiclax.
+     * @return if the read is started
+     */
     public boolean isReadStarted() {
         return readStarted.get();
     }
 
     /**
      * See {@link Socket#isClosed()}.
+     * @return if the socket is closed
      */
     public boolean isClosed() {
         return socket.isClosed();
@@ -70,6 +81,7 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * See {@link Socket#getRemoteSocketAddress()}.
+     * @return remote address
      */
     public SocketAddress getRemoteSocketAddress() {
         return socket.getRemoteSocketAddress();

@@ -4,6 +4,9 @@ import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.message.ReadOkResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Handles the stop read event and responds with success.
+ */
 @RequiredArgsConstructor
 public class StopReadRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "STOPREAD";

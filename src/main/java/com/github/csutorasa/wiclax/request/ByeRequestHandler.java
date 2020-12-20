@@ -2,6 +2,9 @@ package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 
+/**
+ * Last message before closing the connection.
+ */
 public class ByeRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "BYE";
 

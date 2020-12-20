@@ -6,6 +6,9 @@ import com.github.csutorasa.wiclax.message.ClockOkResponse;
 
 import java.time.Instant;
 
+/**
+ * Request to set the clock time.
+ */
 public class SetClockRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "CLOCK";
 

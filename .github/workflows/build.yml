@@ -30,4 +30,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wiclax4j
-        path: build/libs/wiclax4j.jar
+        path: build/libs/*.jar

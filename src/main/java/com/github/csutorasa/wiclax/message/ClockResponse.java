@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+/**
+ * Response with current clock time.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

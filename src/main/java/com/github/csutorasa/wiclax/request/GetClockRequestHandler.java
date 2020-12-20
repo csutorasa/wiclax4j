@@ -6,6 +6,9 @@ import com.github.csutorasa.wiclax.message.WiclaxMessage;
 
 import java.time.Instant;
 
+/**
+ * Request to get the current time from the clock.
+ */
 public class GetClockRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "CLOCK";
 

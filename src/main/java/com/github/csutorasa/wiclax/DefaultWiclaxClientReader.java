@@ -25,6 +25,10 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
     private final Consumer<Exception> unhandledProcessingException;
     private final Consumer<IOException> streamException;
 
+    /**
+     * Creates a new reader.
+     * @param rewindHandler rewind request handler
+     */
     public DefaultWiclaxClientReader(RewindHandler rewindHandler) {
         this.rewindHandler = rewindHandler;
         unhandledRequest = (command, data) -> {};
@@ -65,19 +69,37 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
         }
     }
 
+    /**
+     * Dispatches the rewind request.
+     * @param from rewind from
+     * @param to rewind to
+     */
     @Override
     protected void rewindHandler(Instant from, Instant to) {
         rewindHandler.accept(from, to);
     }
 
+    /**
+     * Dispatches the unhandled request exceptions.
+     * @param command request command
+     * @param data request data
+     */
     protected void unhandledRequest(String command, String data) {
         unhandledRequest.accept(command, data);
     }
 
+    /**
+     * Dispatches the unhandled processing exceptions.
+     * @param exception any exception that happened during request handling
+     */
     protected void unhandledProcessingException(Exception exception) {
         unhandledProcessingException.accept(exception);
     }
 
+    /**
+     * Dispatches the underlying stream exceptions.
+     * @param exception any exception thrown by the socket or the stream
+     */
     protected void streamException(IOException exception) {
         streamException.accept(exception);
     }

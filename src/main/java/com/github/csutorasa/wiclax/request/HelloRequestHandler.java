@@ -2,6 +2,9 @@ package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 
+/**
+ * First message of the connection. Requires no actions.
+ */
 public class HelloRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "HELLO";
 

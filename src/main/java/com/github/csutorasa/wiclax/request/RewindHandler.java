@@ -3,6 +3,9 @@ package com.github.csutorasa.wiclax.request;
 import java.time.Instant;
 import java.util.function.BiConsumer;
 
+/**
+ * Rewind request handler interface.
+ */
 @FunctionalInterface
 public interface RewindHandler extends BiConsumer<Instant, Instant> {
     @Override

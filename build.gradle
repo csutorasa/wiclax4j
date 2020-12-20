@@ -10,6 +10,8 @@ group =
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
@@ -34,7 +36,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId 'com.github.csutorasa'
             artifactId 'wiclax4j'
-            version '1.1'
+            version '1.0.0'
 
             pom {
                 name = 'Wiclax4j'

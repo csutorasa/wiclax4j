@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+/**
+ * Message to mark the start of the race.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -10,6 +10,9 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+/**
+ * Message which contains an acquisition.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

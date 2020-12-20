@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
+/**
+ * Rewind request to resend all acquisitions between the from and to times.
+ */
 @RequiredArgsConstructor
 public class RewindRequestHandler extends WiclaxRequestHandler {
     private static final String COMMAND = "REWIND";
