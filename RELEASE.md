@@ -42,7 +42,8 @@ You will need the 8 character long keyId from here
 
 ## Running the publish
 
-Fill in the variables in [gradle properties](gradle.properties) and run:
+Fill in the variables in [gradle properties](gradle.example.properties),
+rename it to `gradle.properties` and run:
 
 ```shell
 ./gradlew publish
