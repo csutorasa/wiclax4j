@@ -19,6 +19,7 @@ import java.time.Instant;
 import com.github.csutorasa.wiclax.DefaultWiclaxClientReader;
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.WiclaxServerSocket;
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 
 public class WiclaxExample {
