@@ -50,7 +50,7 @@ public class WiclaxExample {
 
 ## How it works
 
-First it is recommended to get to know to the [protocol specification](docs/protocol.md).
+First it is recommended to get to know to the [protocol specification](docs/protocol.md)
 and [custom protocol options and configuration](docs/acquisitiontype.md).
 
 ### Requests
