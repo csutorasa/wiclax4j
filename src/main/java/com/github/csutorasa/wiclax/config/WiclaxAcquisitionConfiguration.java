@@ -111,6 +111,7 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
         Element acquisition = document.createElement("Acquisition");
         document.appendChild(acquisition);
 
+        addAttribute(acquisition, "name", getName());
         addAttribute(acquisition, "defaultTCPPort", getDefaultTCPPort());
         addAttribute(acquisition, "withHeartbeat", BooleanToNumberFormatter.format(getWithHeartbeat()));
         addAttribute(acquisition, "heartbeatValue", getHeartbeatValue());
