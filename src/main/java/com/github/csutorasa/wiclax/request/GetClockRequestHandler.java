@@ -1,20 +1,26 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
+import com.github.csutorasa.wiclax.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.message.ClockResponse;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
 /**
  * Request to get the current time from the clock.
  */
+@RequiredArgsConstructor
 public class GetClockRequestHandler extends WiclaxRequestHandler {
-    private static final String COMMAND = "CLOCK";
+    private static final String DEFAULT_COMMAND = "CLOCK";
+
+    private final WiclaxProtocolOptions protocolOptions;
 
     @Override
     public boolean supports(String command, String data) {
-        return COMMAND.equals(command) && data.isEmpty();
+        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getGetClockCommand).orElse(DEFAULT_COMMAND);
+        return expectedCommand.equals(command) && data.isEmpty();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.github.csutorasa.wiclax
+package com.github.csutorasa.wiclax.formatter
 
 import spock.lang.Specification
 

@@ -1,6 +1,7 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
+import com.github.csutorasa.wiclax.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.message.ReadOkResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -9,13 +10,15 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class StartReadRequestHandler extends WiclaxRequestHandler {
-    private static final String COMMAND = "STARTREAD";
+    private static final String DEFAULT_COMMAND = "STARTREAD";
 
+    private final WiclaxProtocolOptions protocolOptions;
     private final StartReadHandler handler;
 
     @Override
     public boolean supports(String command, String data) {
-        return COMMAND.equals(command);
+        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getStartReadCommand).orElse(DEFAULT_COMMAND);
+        return expectedCommand.equals(command);
     }
 
     @Override

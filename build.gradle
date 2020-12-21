@@ -49,7 +49,7 @@ publishing {
 
             pom {
                 name = 'Wiclax4j'
-                description = 'This is a pure java generic Wiclax server implementation'
+                description = 'This is a pure java generic acquisition Wiclax server implementation'
                 url = 'https://www.github.com/'
                 licenses {
                     license {

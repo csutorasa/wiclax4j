@@ -14,9 +14,15 @@ import java.util.function.BiConsumer;
 public abstract class WiclaxClientReader {
 
     /**
+     * Default command end string.
+     */
+    protected static final String DEFAULT_OUT_COMMAND_END_CHARS = "\r";
+
+    /**
      * Reads and parses the line. Executes the processor with the command and data parameters.
+     *
      * @param processor command and data handler
-     * @param line line to be parsed
+     * @param line      line to be parsed
      */
     protected void processLine(BiConsumer<String, String> processor, String line) {
         int indexOfFirstSpace = line.indexOf(" ");
@@ -33,20 +39,33 @@ public abstract class WiclaxClientReader {
     }
 
     /**
+     * Gets the command separator string.
+     *
+     * @param protocolOptions protocol options
+     * @return separator
+     */
+    protected String getCommandEndString(WiclaxProtocolOptions protocolOptions) {
+        return protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
+    }
+
+    /**
      * Starts the reading from the client.
-     * @param socket client socket
-     * @param inputStream input stream reader
+     *
+     * @param socket           client socket
+     * @param inputStream      input stream reader
      * @param clientConnection connection
+     * @param protocolOptions  protocol options
      * @param startReadHandler start review handler
-     * @param stopReadHandler stop review handler
+     * @param stopReadHandler  stop review handler
      */
     protected abstract void startRead(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                                      StartReadHandler startReadHandler, StopReadHandler stopReadHandler);
+                                      WiclaxProtocolOptions protocolOptions, StartReadHandler startReadHandler, StopReadHandler stopReadHandler);
 
     /**
      * Handles the rewind events. It should replay events between the period.
+     *
      * @param from rewind from
-     * @param to rewind to
+     * @param to   rewind to
      */
     protected abstract void rewindHandler(Instant from, Instant to);
 }

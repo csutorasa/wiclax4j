@@ -24,6 +24,7 @@ public class WiclaxClock {
 
     /**
      * Creates a new clock with a custom getter.
+     *
      * @param nowGetter supplier of the current time
      */
     public WiclaxClock(Supplier<Instant> nowGetter) {
@@ -32,6 +33,7 @@ public class WiclaxClock {
 
     /**
      * Gets the current time, based on the set delay.
+     *
      * @return current time
      */
     public Instant getDateTime() {
@@ -41,6 +43,7 @@ public class WiclaxClock {
     /**
      * Sets the current time and the delay.
      * This delay is used when getting the current time.
+     *
      * @param dateTime current time
      */
     public void setDateTime(Instant dateTime) {

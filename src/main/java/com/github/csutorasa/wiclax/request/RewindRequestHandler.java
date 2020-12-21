@@ -1,7 +1,8 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.WiclaxDateFormatters;
+import com.github.csutorasa.wiclax.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
@@ -11,13 +12,15 @@ import java.time.Instant;
  */
 @RequiredArgsConstructor
 public class RewindRequestHandler extends WiclaxRequestHandler {
-    private static final String COMMAND = "REWIND";
+    private static final String DEFAULT_COMMAND = "REWIND";
 
+    private final WiclaxProtocolOptions protocolOptions;
     private final RewindHandler rewindTask;
 
     @Override
     public boolean supports(String command, String data) {
-        return COMMAND.equals(command);
+        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getRewindCommand).orElse(DEFAULT_COMMAND);
+        return expectedCommand.equals(command);
     }
 
     @Override

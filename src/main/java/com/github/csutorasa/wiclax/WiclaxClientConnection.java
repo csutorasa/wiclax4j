@@ -21,10 +21,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class WiclaxClientConnection implements Closeable {
 
+    private static final String DEFAULT_IN_COMMAND_END_CHARS = "\r";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     @Getter
     private final WiclaxClock clock;
+    private final WiclaxProtocolOptions protocolOptions;
     private final Socket socket;
     private final BufferedReader inputStream;
     private final BufferedWriter outputStream;
@@ -32,12 +34,15 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * Creates a new client connection
-     * @param socket client socket
-     * @param clock clock to be used
+     *
+     * @param socket          client socket
+     * @param protocolOptions protocol options
+     * @param clock           clock to be used
      * @throws IOException if the socket or stream throws and exception
      */
-    public WiclaxClientConnection(Socket socket, WiclaxClock clock) throws IOException {
+    public WiclaxClientConnection(Socket socket, WiclaxProtocolOptions protocolOptions, WiclaxClock clock) throws IOException {
         this.socket = socket;
+        this.protocolOptions = protocolOptions;
         this.clock = clock;
         inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream(), CHARSET));
         outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), CHARSET));
@@ -45,26 +50,29 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * Starts reading from the client and processes the messages.
+     *
      * @param clientReader client reading logic
      */
     public void startReading(WiclaxClientReader clientReader) {
-        clientReader.startRead(socket, inputStream, this, () -> readStarted.set(true),  () -> readStarted.set(false));
+        clientReader.startRead(socket, inputStream, this, protocolOptions, () -> readStarted.set(true), () -> readStarted.set(false));
     }
 
     /**
      * Sends data to Wiclax.
+     * This method is synchronized to the class, so messages from different threads will not conflict.
      *
      * @param message message to be sent
      * @throws IOException thrown if the underlying stream throws an exception
      */
-    public void send(WiclaxMessage message) throws IOException {
+    public synchronized void send(WiclaxMessage message) throws IOException {
         outputStream.write(message.toData());
-        outputStream.write("\r");
+        outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
         outputStream.flush();
     }
 
     /**
      * Gets if the read is started in Wiclax.
+     *
      * @return if the read is started
      */
     public boolean isReadStarted() {
@@ -73,6 +81,7 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * See {@link Socket#isClosed()}.
+     *
      * @return if the socket is closed
      */
     public boolean isClosed() {
@@ -81,6 +90,7 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * See {@link Socket#getRemoteSocketAddress()}.
+     *
      * @return remote address
      */
     public SocketAddress getRemoteSocketAddress() {

@@ -11,8 +11,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Instant;
+import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * Default reader implementation. The socket is read until it is closed.
@@ -27,34 +29,39 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     /**
      * Creates a new reader.
+     *
      * @param rewindHandler rewind request handler
      */
     public DefaultWiclaxClientReader(RewindHandler rewindHandler) {
         this.rewindHandler = rewindHandler;
-        unhandledRequest = (command, data) -> {};
-        unhandledProcessingException = (exception) -> {};
-        streamException = (exception) -> {};
+        unhandledRequest = (command, data) -> {
+        };
+        unhandledProcessingException = (exception) -> {
+        };
+        streamException = (exception) -> {
+        };
     }
 
     @Override
     protected void startRead(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                             StartReadHandler startReadHandler, StopReadHandler stopReadHandler) {
-        WiclaxRequestHandlers requestHandlers = WiclaxRequestHandlers.fromAllHandlers(startReadHandler, stopReadHandler, this::rewindHandler);
-        Thread readerThread = new Thread(() -> reader(socket, inputStream, clientConnection, requestHandlers));
+                             WiclaxProtocolOptions protocolOptions, StartReadHandler startReadHandler,
+                             StopReadHandler stopReadHandler) {
+        WiclaxRequestHandlers requestHandlers = WiclaxRequestHandlers.fromAllHandlers(protocolOptions,
+                startReadHandler, stopReadHandler, this::rewindHandler);
+        Thread readerThread = new Thread(() -> reader(socket, inputStream, protocolOptions, clientConnection, requestHandlers));
         readerThread.setName("Wiclax input reader for " + socket.getRemoteSocketAddress().toString());
         readerThread.start();
     }
 
-    private void reader(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                        WiclaxRequestHandlers requestHandlers) {
+    private void reader(Socket socket, BufferedReader inputStream, WiclaxProtocolOptions protocolOptions,
+                        WiclaxClientConnection clientConnection, WiclaxRequestHandlers requestHandlers) {
+        Scanner scanner = new Scanner(inputStream);
+        String delimiter = protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
+        scanner.useDelimiter(Pattern.compile(delimiter));
         while (!socket.isClosed()) {
-            try {
-                while (inputStream.ready()) {
-                    String line = inputStream.readLine();
-                    processLine((command, data) -> processRequest(clientConnection, requestHandlers, command, data), line);
-                }
-            } catch (IOException e) {
-                streamException(e);
+            while (scanner.hasNext()) {
+                String line = scanner.next();
+                processLine((command, data) -> processRequest(clientConnection, requestHandlers, command, data), line);
             }
         }
     }
@@ -71,8 +78,9 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     /**
      * Dispatches the rewind request.
+     *
      * @param from rewind from
-     * @param to rewind to
+     * @param to   rewind to
      */
     @Override
     protected void rewindHandler(Instant from, Instant to) {
@@ -81,8 +89,9 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     /**
      * Dispatches the unhandled request exceptions.
+     *
      * @param command request command
-     * @param data request data
+     * @param data    request data
      */
     protected void unhandledRequest(String command, String data) {
         unhandledRequest.accept(command, data);
@@ -90,6 +99,7 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     /**
      * Dispatches the unhandled processing exceptions.
+     *
      * @param exception any exception that happened during request handling
      */
     protected void unhandledProcessingException(Exception exception) {
@@ -98,6 +108,7 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     /**
      * Dispatches the underlying stream exceptions.
+     *
      * @param exception any exception thrown by the socket or the stream
      */
     protected void streamException(IOException exception) {

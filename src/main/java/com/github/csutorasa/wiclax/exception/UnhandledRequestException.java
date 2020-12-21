@@ -18,8 +18,9 @@ public class UnhandledRequestException extends RuntimeException {
 
     /**
      * Creates a new Exception from the command and data
+     *
      * @param command request command
-     * @param data request data
+     * @param data    request data
      */
     public UnhandledRequestException(String command, String data) {
         super("Unhandled request: " + command + " " + data);

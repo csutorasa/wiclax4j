@@ -1,6 +1,6 @@
 package com.github.csutorasa.wiclax.message;
 
-import com.github.csutorasa.wiclax.WiclaxDateFormatters;
+import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
