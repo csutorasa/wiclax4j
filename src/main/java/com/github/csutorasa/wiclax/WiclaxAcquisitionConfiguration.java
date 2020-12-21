@@ -68,6 +68,31 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
     }
 
     /**
+     * Creates a configuration from existing options.
+     * @param protocolOptions protocol options
+     * @param name name and IDof the configuration
+     * @param icon icon data 32x32 png image
+     * @return new configuration
+     */
+    public static WiclaxAcquisitionConfiguration fromOptions(WiclaxProtocolOptions protocolOptions, String name, byte[] icon) {
+        return new WiclaxAcquisitionConfiguration(
+                protocolOptions.getDefaultTCPPort(),
+                protocolOptions.getWithHeartbeat(),
+                protocolOptions.getHeartbeatValue(),
+                protocolOptions.getPassingDataSeparator(),
+                protocolOptions.getPassingDataMask(),
+                protocolOptions.getInCommandEndChars(),
+                protocolOptions.getOutCommandEndChars(),
+                protocolOptions.getCommandsForInitialization(),
+                protocolOptions.getGetClockCommand(),
+                protocolOptions.getSetClockCommand(),
+                protocolOptions.getRewindCommand(),
+                protocolOptions.getStartReadCommand(),
+                protocolOptions.getStopReadCommand(),
+                name, icon);
+    }
+
+    /**
      * Writes the XML that can be used for custom Acquisition type configuration.
      *
      * @param writer output stream
