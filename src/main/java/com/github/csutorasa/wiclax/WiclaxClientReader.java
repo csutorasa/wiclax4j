@@ -1,5 +1,6 @@
 package com.github.csutorasa.wiclax;
 
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.request.StartReadHandler;
 import com.github.csutorasa.wiclax.request.StopReadHandler;
 

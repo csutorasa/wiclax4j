@@ -1,7 +1,7 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.message.ClockResponse;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import lombok.RequiredArgsConstructor;

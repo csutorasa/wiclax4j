@@ -1,4 +1,4 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.config;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.github.csutorasa.wiclax.message;
 
-import com.github.csutorasa.wiclax.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxAcuqisitionFormatter;
 import com.github.csutorasa.wiclax.model.Acquisition;
 import lombok.EqualsAndHashCode;

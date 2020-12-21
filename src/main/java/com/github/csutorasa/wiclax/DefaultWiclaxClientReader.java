@@ -1,5 +1,7 @@
 package com.github.csutorasa.wiclax;
 
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.exception.ErrorHandler;
 import com.github.csutorasa.wiclax.exception.UnhandledRequestException;
 import com.github.csutorasa.wiclax.request.RewindHandler;
 import com.github.csutorasa.wiclax.request.StartReadHandler;
@@ -8,12 +10,10 @@ import com.github.csutorasa.wiclax.request.WiclaxRequestHandlers;
 import lombok.RequiredArgsConstructor;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.net.Socket;
 import java.time.Instant;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -24,8 +24,8 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     private final RewindHandler rewindHandler;
     private final BiConsumer<String, String> unhandledRequest;
-    private final Consumer<Exception> unhandledProcessingException;
-    private final Consumer<IOException> streamException;
+    private final ErrorHandler<Exception> unhandledProcessingException;
+    private final ErrorHandler<Throwable> threadException;
 
     /**
      * Creates a new reader.
@@ -38,8 +38,7 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
         };
         unhandledProcessingException = (exception) -> {
         };
-        streamException = (exception) -> {
-        };
+        threadException = ErrorHandler.rethrow();
     }
 
     @Override
@@ -59,9 +58,13 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
         String delimiter = protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
         scanner.useDelimiter(Pattern.compile(delimiter));
         while (!socket.isClosed()) {
-            while (scanner.hasNext()) {
-                String line = scanner.next();
-                processLine((command, data) -> processRequest(clientConnection, requestHandlers, command, data), line);
+            try {
+                while (scanner.hasNext()) {
+                    String line = scanner.next();
+                    processLine((command, data) -> processRequest(clientConnection, requestHandlers, command, data), line);
+                }
+            } catch (Throwable t) {
+                threadException(t);
             }
         }
     }
@@ -103,15 +106,15 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
      * @param exception any exception that happened during request handling
      */
     protected void unhandledProcessingException(Exception exception) {
-        unhandledProcessingException.accept(exception);
+        unhandledProcessingException.handle(exception);
     }
 
     /**
-     * Dispatches the underlying stream exceptions.
+     * Last chance to stop the reader thread from being stopped.
      *
-     * @param exception any exception thrown by the socket or the stream
+     * @param throwable any exception thrown by the thread
      */
-    protected void streamException(IOException exception) {
-        streamException.accept(exception);
+    protected void threadException(Throwable throwable) {
+        threadException.handle(throwable);
     }
 }

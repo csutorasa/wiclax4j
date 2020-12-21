@@ -1,6 +1,7 @@
 package com.github.csutorasa.wiclax;
 
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.config;
 
 import lombok.Getter;
 import org.w3c.dom.Document;
@@ -69,9 +69,10 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
 
     /**
      * Creates a configuration from existing options.
+     *
      * @param protocolOptions protocol options
-     * @param name name and IDof the configuration
-     * @param icon icon data 32x32 png image
+     * @param name            name and IDof the configuration
+     * @param icon            icon data 32x32 png image
      * @return new configuration
      */
     public static WiclaxAcquisitionConfiguration fromOptions(WiclaxProtocolOptions protocolOptions, String name, byte[] icon) {
