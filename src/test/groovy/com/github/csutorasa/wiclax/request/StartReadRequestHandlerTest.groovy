@@ -14,7 +14,7 @@ class StartReadRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new StartReadRequestHandler(WiclaxProtocolOptions.defaults(), handler)
+        requestHandler = new StartReadRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS, handler)
         1 * handler.run()
         1 * connection.send(_) >> { WiclaxMessage message ->
             assert message instanceof ReadOkResponse

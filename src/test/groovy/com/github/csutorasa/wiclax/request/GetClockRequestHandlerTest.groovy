@@ -17,7 +17,7 @@ class GetClockRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new GetClockRequestHandler(WiclaxProtocolOptions.defaults())
+        requestHandler = new GetClockRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS)
         1 * connection.getClock() >> clock
         1 * clock.getDateTime() >> Instant.now()
         1 * connection.send(_) >> { WiclaxMessage message ->

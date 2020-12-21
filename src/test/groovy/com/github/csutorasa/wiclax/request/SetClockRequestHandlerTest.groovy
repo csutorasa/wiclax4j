@@ -16,7 +16,7 @@ class SetClockRequestHandlerTest extends Specification {
     def "default works"() {
         setup:
         String data = "03-12-2007 10:15:30"
-        requestHandler = new SetClockRequestHandler(WiclaxProtocolOptions.defaults())
+        requestHandler = new SetClockRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS)
         1 * connection.getClock() >> clock
         1 * clock.setDateTime(_)
         1 * connection.send(_) >> { WiclaxMessage message ->

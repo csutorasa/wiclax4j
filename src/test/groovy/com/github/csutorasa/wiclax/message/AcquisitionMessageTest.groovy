@@ -14,7 +14,7 @@ class AcquisitionMessageTest extends Specification {
         setup:
         Instant detectionTime = LocalDateTime.parse("2007-12-03T10:15:30.20").atZone(ZoneId.systemDefault()).toInstant()
         def acquisition = new Acquisition('chipId', detectionTime, 'deviceId', 1, 3, true)
-        def message = new AcquisitionMessage(acquisition, WiclaxProtocolOptions.defaults())
+        def message = new AcquisitionMessage(acquisition, WiclaxProtocolOptions.DEFAULT_OPTIONS)
         expect:
         "chipId;03-12-2007 10:15:30.200;deviceId;1;3;1" == message.toData()
     }
@@ -23,7 +23,7 @@ class AcquisitionMessageTest extends Specification {
         setup:
         Instant detectionTime = LocalDateTime.parse("2007-12-03T10:15:30.20").atZone(ZoneId.systemDefault()).toInstant()
         def acquisition = new Acquisition('chipId', detectionTime, 'deviceId', null, null, false)
-        def message = new AcquisitionMessage(acquisition, WiclaxProtocolOptions.defaults())
+        def message = new AcquisitionMessage(acquisition, WiclaxProtocolOptions.DEFAULT_OPTIONS)
         expect:
         "chipId;03-12-2007 10:15:30.200;deviceId;;;0" == message.toData()
     }

@@ -9,7 +9,7 @@ class HeartBeatMessageTest extends Specification {
 
     def "default to data works"() {
         setup:
-        message = new HeartBeatMessage(WiclaxProtocolOptions.defaults())
+        message = new HeartBeatMessage(WiclaxProtocolOptions.DEFAULT_OPTIONS)
         expect:
         "*" == message.toData()
     }

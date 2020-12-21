@@ -14,7 +14,7 @@ class StopReadRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new StopReadRequestHandler(WiclaxProtocolOptions.defaults(), handler)
+        requestHandler = new StopReadRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS, handler)
         1 * handler.run()
         1 * connection.send(_) >> { WiclaxMessage message ->
             assert message instanceof ReadOkResponse

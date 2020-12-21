@@ -11,7 +11,7 @@ class InitializationRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new InitializationRequestHandler(WiclaxProtocolOptions.defaults())
+        requestHandler = new InitializationRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS)
         expect:
         requestHandler.supports("HELLO", "")
         requestHandler.handle(connection, "")
