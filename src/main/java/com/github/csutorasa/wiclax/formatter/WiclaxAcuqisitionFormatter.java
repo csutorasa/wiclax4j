@@ -115,7 +115,7 @@ public class WiclaxAcuqisitionFormatter {
         parts.add(acquisition -> orEmpty(acquisition.getDeviceId()));
         parts.add(acquisition -> orEmpty(acquisition.getLap()));
         parts.add(acquisition -> orEmpty(acquisition.getBatteryLevel()));
-        parts.add(acquisition -> acquisition.isRewind() ? "1" : "0");
+        parts.add(acquisition -> BooleanToNumberFormatter.format(acquisition.isRewind()));
         return new WiclaxAcuqisitionFormatter(parts, separator);
     }
 

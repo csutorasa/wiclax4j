@@ -1,5 +1,6 @@
 package com.github.csutorasa.wiclax.config;
 
+import com.github.csutorasa.wiclax.formatter.BooleanToNumberFormatter;
 import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,12 +106,13 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         document.setXmlVersion("1.0");
+        document.setXmlStandalone(true);
 
         Element acquisition = document.createElement("Acquisition");
         document.appendChild(acquisition);
 
         addAttribute(acquisition, "defaultTCPPort", getDefaultTCPPort());
-        addAttribute(acquisition, "withHeartbeat", getWithHeartbeat());
+        addAttribute(acquisition, "withHeartbeat", BooleanToNumberFormatter.format(getWithHeartbeat()));
         addAttribute(acquisition, "heartbeatValue", getHeartbeatValue());
         addAttribute(acquisition, "passingDataSeparator", getPassingDataSeparator());
         addAttribute(acquisition, "passingDataMask", getPassingDataMask());
