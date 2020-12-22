@@ -11,6 +11,7 @@ public class BooleanToNumberFormatter {
 
     /**
      * Converts boolean to text.
+     *
      * @param value boolean
      * @return text
      */
@@ -26,12 +27,13 @@ public class BooleanToNumberFormatter {
 
     /**
      * Converts text to boolean.
+     *
      * @param text text
      * @return boolean
      */
-    public static  Boolean parse(String text) {
+    public static Boolean parse(String text) {
         if ("1".equals(text)) {
-           return true;
+            return true;
         }
         if ("0".equals(text)) {
             return false;

@@ -1,7 +1,5 @@
 package com.github.csutorasa.wiclax.response;
 
-import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
-
 /**
  * Base response class.
  */

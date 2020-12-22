@@ -1,8 +1,6 @@
 package com.github.csutorasa.wiclax.response;
 
-import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
-import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

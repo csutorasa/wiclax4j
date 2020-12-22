@@ -1,6 +1,5 @@
 package com.github.csutorasa.wiclax.request;
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.response.ClockResponse;
@@ -8,7 +7,6 @@ import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
-import java.util.function.Consumer;
 
 /**
  * Request to get the current time from the clock.

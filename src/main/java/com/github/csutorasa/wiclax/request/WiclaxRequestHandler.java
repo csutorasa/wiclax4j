@@ -1,13 +1,5 @@
 package com.github.csutorasa.wiclax.request;
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.message.WiclaxMessage;
-import com.github.csutorasa.wiclax.response.WiclaxResponse;
-import lombok.RequiredArgsConstructor;
-
-import java.io.IOException;
-import java.util.function.Consumer;
-
 /**
  * Base of all request handlers.
  */
@@ -24,7 +16,7 @@ public interface WiclaxRequestHandler {
     /**
      * Handles the request.
      *
-     * @param data         request data
+     * @param data request data
      */
     void handle(String data);
 }

@@ -10,6 +10,7 @@ public interface ResponseSender {
 
     /**
      * Sends a response.
+     *
      * @param response response to send
      */
     void send(WiclaxResponse response);

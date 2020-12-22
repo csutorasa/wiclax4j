@@ -1,14 +1,11 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.exception.UnhandledRequestException;
-import com.github.csutorasa.wiclax.response.WiclaxResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Collection of request handlers.
@@ -56,8 +53,8 @@ public class WiclaxRequestHandlers {
     /**
      * Handles a request.
      *
-     * @param command    request command
-     * @param data       request data
+     * @param command request command
+     * @param data    request data
      */
     public void handle(String command, String data) {
         WiclaxRequestHandler handler = handlers.stream().filter(h -> h.supports(command, data)).findFirst().orElseThrow(() ->

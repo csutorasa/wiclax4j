@@ -1,6 +1,5 @@
 package com.github.csutorasa.wiclax.request;
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.response.ReadOkResponse;
 import lombok.RequiredArgsConstructor;

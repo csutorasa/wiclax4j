@@ -1,6 +1,6 @@
 package com.github.csutorasa.wiclax.request
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection
+
 import spock.lang.Specification
 
 class ByeRequestHandlerTest extends Specification {

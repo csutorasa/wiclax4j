@@ -2,7 +2,6 @@ package com.github.csutorasa.wiclax;
 
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
-import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.Getter;

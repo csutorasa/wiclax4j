@@ -20,6 +20,7 @@ public class WiclaxProtocolOptions {
 
     /**
      * Default generic options.
+     *
      * @return protocol options
      */
     public static WiclaxProtocolOptions defaults() {

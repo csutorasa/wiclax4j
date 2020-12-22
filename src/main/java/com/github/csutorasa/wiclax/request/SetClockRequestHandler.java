@@ -1,16 +1,13 @@
 package com.github.csutorasa.wiclax.request;
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
 import com.github.csutorasa.wiclax.response.ClockOkResponse;
-import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Consumer;
 
 /**
  * Request to set the clock time.

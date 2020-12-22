@@ -1,12 +1,8 @@
 package com.github.csutorasa.wiclax.request;
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.response.ReadOkResponse;
-import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.RequiredArgsConstructor;
-
-import java.util.function.Consumer;
 
 /**
  * Handles the start read event and responds with success.

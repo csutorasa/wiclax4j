@@ -1,9 +1,8 @@
 package com.github.csutorasa.wiclax.request
 
-import com.github.csutorasa.wiclax.WiclaxClientConnection
+
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions
 import com.github.csutorasa.wiclax.response.ReadOkResponse
-import com.github.csutorasa.wiclax.message.WiclaxMessage
 import com.github.csutorasa.wiclax.response.WiclaxResponse
 import spock.lang.Specification
 
