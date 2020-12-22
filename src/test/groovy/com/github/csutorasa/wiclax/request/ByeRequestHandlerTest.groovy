@@ -5,12 +5,11 @@ import spock.lang.Specification
 
 class ByeRequestHandlerTest extends Specification {
 
-    WiclaxClientConnection connection = Mock()
     ByeRequestHandler requestHandler = new ByeRequestHandler()
 
     def "it works"() {
         expect:
         requestHandler.supports("BYE", "")
-        requestHandler.handle(connection, "")
+        requestHandler.handle("")
     }
 }

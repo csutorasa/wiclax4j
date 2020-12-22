@@ -11,7 +11,7 @@ import java.time.Instant;
  * Rewind request to resend all acquisitions between the from and to times.
  */
 @RequiredArgsConstructor
-public class RewindRequestHandler extends WiclaxRequestHandler {
+public class RewindRequestHandler implements WiclaxRequestHandler {
     private static final String DEFAULT_COMMAND = "REWIND";
 
     private final WiclaxProtocolOptions protocolOptions;
@@ -24,7 +24,7 @@ public class RewindRequestHandler extends WiclaxRequestHandler {
     }
 
     @Override
-    public void handle(WiclaxClientConnection clientConnection, String data) {
+    public void handle(String data) {
         String[] parts = data.split(" ");
         Instant from = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[0] + " " + parts[1]));
         Instant to = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[2] + " " + parts[3]));

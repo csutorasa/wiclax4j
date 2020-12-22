@@ -22,10 +22,9 @@ public class AcquisitionMessage extends WiclaxMessage {
     private static final String DEFAULT_PASSING_DATA_SEPARATOR = ";";
 
     private final Acquisition acquisition;
-    private final WiclaxProtocolOptions protocolOptions;
 
     @Override
-    public String toData() {
+    public String toData(WiclaxProtocolOptions protocolOptions) {
         Optional<String> mask = protocolOptions.get(WiclaxProtocolOptions::getPassingDataMask);
         Optional<String> separator = protocolOptions.get(WiclaxProtocolOptions::getPassingDataSeparator);
         WiclaxAcuqisitionFormatter formatter;

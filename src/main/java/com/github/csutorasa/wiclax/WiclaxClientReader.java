@@ -55,12 +55,11 @@ public abstract class WiclaxClientReader {
      * @param socket           client socket
      * @param inputStream      input stream reader
      * @param clientConnection connection
-     * @param protocolOptions  protocol options
      * @param startReadHandler start review handler
      * @param stopReadHandler  stop review handler
      */
     protected abstract void startRead(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                                      WiclaxProtocolOptions protocolOptions, StartReadHandler startReadHandler, StopReadHandler stopReadHandler);
+                                      StartReadHandler startReadHandler, StopReadHandler stopReadHandler);
 
     /**
      * Handles the rewind events. It should replay events between the period.

@@ -11,10 +11,10 @@ class InitializationRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new InitializationRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS)
+        requestHandler = new InitializationRequestHandler(WiclaxProtocolOptions.defaults())
         expect:
         requestHandler.supports("HELLO", "")
-        requestHandler.handle(connection, "")
+        requestHandler.handle("")
     }
 
     def "custom works"() {
@@ -23,6 +23,6 @@ class InitializationRequestHandlerTest extends Specification {
         requestHandler = new InitializationRequestHandler(WiclaxProtocolOptions.builder().commandsForInitialization(customCommand).build())
         expect:
         requestHandler.supports(customCommand, "")
-        requestHandler.handle(connection, "")
+        requestHandler.handle("")
     }
 }

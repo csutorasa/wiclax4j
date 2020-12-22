@@ -9,16 +9,16 @@ class HeartBeatMessageTest extends Specification {
 
     def "default to data works"() {
         setup:
-        message = new HeartBeatMessage(WiclaxProtocolOptions.DEFAULT_OPTIONS)
+        message = new HeartBeatMessage()
         expect:
-        "*" == message.toData()
+        "*" == message.toData(WiclaxProtocolOptions.defaults())
     }
 
     def "custom to data works"() {
         setup:
         String customCommand = "-"
-        message = new HeartBeatMessage(WiclaxProtocolOptions.builder().heartbeatValue(customCommand).build())
+        message = new HeartBeatMessage()
         expect:
-        customCommand == message.toData()
+        customCommand == message.toData(WiclaxProtocolOptions.builder().heartbeatValue(customCommand).build())
     }
 }

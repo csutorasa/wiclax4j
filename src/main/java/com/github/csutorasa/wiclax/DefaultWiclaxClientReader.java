@@ -43,17 +43,16 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     @Override
     protected void startRead(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                             WiclaxProtocolOptions protocolOptions, StartReadHandler startReadHandler,
-                             StopReadHandler stopReadHandler) {
-        WiclaxRequestHandlers requestHandlers = WiclaxRequestHandlers.fromAllHandlers(protocolOptions,
-                startReadHandler, stopReadHandler, this::rewindHandler);
-        Thread readerThread = new Thread(() -> reader(socket, inputStream, protocolOptions, clientConnection, requestHandlers));
+                             StartReadHandler startReadHandler, StopReadHandler stopReadHandler) {
+        WiclaxRequestHandlers requestHandlers = WiclaxRequestHandlers.fromAllHandlers(clientConnection,
+                clientConnection::sendResponse, startReadHandler, stopReadHandler, this::rewindHandler);
+        Thread readerThread = new Thread(() -> reader(socket, inputStream, clientConnection.getProtocolOptions(), requestHandlers));
         readerThread.setName("Wiclax input reader for " + socket.getRemoteSocketAddress().toString());
         readerThread.start();
     }
 
     private void reader(Socket socket, BufferedReader inputStream, WiclaxProtocolOptions protocolOptions,
-                        WiclaxClientConnection clientConnection, WiclaxRequestHandlers requestHandlers) {
+                        WiclaxRequestHandlers requestHandlers) {
         Scanner scanner = new Scanner(inputStream);
         String delimiter = protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
         scanner.useDelimiter(Pattern.compile(delimiter));
@@ -61,7 +60,7 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
             try {
                 while (scanner.hasNext()) {
                     String line = scanner.next();
-                    processLine((command, data) -> processRequest(clientConnection, requestHandlers, command, data), line);
+                    processLine((command, data) -> processRequest(requestHandlers, command, data), line);
                 }
             } catch (Throwable t) {
                 threadException(t);
@@ -69,9 +68,9 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
         }
     }
 
-    private void processRequest(WiclaxClientConnection clientConnection, WiclaxRequestHandlers requestHandlers, String command, String data) {
+    private void processRequest(WiclaxRequestHandlers requestHandlers, String command, String data) {
         try {
-            requestHandlers.handle(clientConnection, command, data);
+            requestHandlers.handle(command, data);
         } catch (UnhandledRequestException e) {
             unhandledRequest(e.getCommand(), e.getData());
         } catch (Exception e) {

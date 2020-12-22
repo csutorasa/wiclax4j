@@ -5,7 +5,7 @@ import com.github.csutorasa.wiclax.WiclaxClientConnection;
 /**
  * Last message before closing the connection.
  */
-public class ByeRequestHandler extends WiclaxRequestHandler {
+public class ByeRequestHandler implements WiclaxRequestHandler {
     private static final String COMMAND = "BYE";
 
     @Override
@@ -14,7 +14,7 @@ public class ByeRequestHandler extends WiclaxRequestHandler {
     }
 
     @Override
-    public void handle(WiclaxClientConnection clientConnection, String data) {
+    public void handle(String data) {
         // Connection is closing
     }
 }

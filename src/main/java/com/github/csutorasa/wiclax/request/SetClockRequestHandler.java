@@ -1,22 +1,27 @@
 package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
+import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
-import com.github.csutorasa.wiclax.message.ClockOkResponse;
+import com.github.csutorasa.wiclax.response.ClockOkResponse;
+import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Consumer;
 
 /**
  * Request to set the clock time.
  */
 @RequiredArgsConstructor
-public class SetClockRequestHandler extends WiclaxRequestHandler {
+public class SetClockRequestHandler implements WiclaxRequestHandler {
     private static final String DEFAULT_COMMAND = "CLOCK";
 
     private final WiclaxProtocolOptions protocolOptions;
+    private final WiclaxClock clock;
+    private final ResponseSender responseSender;
 
     @Override
     public boolean supports(String command, String data) {
@@ -26,13 +31,13 @@ public class SetClockRequestHandler extends WiclaxRequestHandler {
     }
 
     @Override
-    public void handle(WiclaxClientConnection clientConnection, String data) {
+    public void handle(String data) {
         DateTimeFormatter formatter = protocolOptions.get(WiclaxProtocolOptions::getSetClockCommand)
                 .map(c -> c.substring(c.indexOf(" ") + 1))
                 .map(WiclaxDateFormatters::createFormWiclaxPattern)
                 .orElse(WiclaxDateFormatters.DATE_TIME_FORMATTER);
         Instant dateTime = Instant.from(formatter.parse(data));
-        clientConnection.getClock().setDateTime(dateTime);
-        send(clientConnection, new ClockOkResponse());
+        clock.setDateTime(dateTime);
+        responseSender.send(new ClockOkResponse());
     }
 }

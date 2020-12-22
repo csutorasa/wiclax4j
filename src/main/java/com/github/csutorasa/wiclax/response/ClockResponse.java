@@ -1,6 +1,8 @@
-package com.github.csutorasa.wiclax.message;
+package com.github.csutorasa.wiclax.response;
 
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
+import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +19,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ClockResponse extends WiclaxMessage {
+public class ClockResponse implements WiclaxResponse {
 
     private Instant dateTime;
 

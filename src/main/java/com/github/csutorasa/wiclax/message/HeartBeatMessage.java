@@ -11,10 +11,8 @@ public class HeartBeatMessage extends WiclaxMessage {
 
     private static final String DEFAULT_COMMAND = "*";
 
-    private final WiclaxProtocolOptions protocolOptions;
-
     @Override
-    public String toData() {
+    public String toData(WiclaxProtocolOptions protocolOptions) {
         return protocolOptions.get(WiclaxProtocolOptions::getHeartbeatValue).orElse(DEFAULT_COMMAND);
     }
 }

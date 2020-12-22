@@ -2,18 +2,19 @@ package com.github.csutorasa.wiclax.request;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
-import com.github.csutorasa.wiclax.message.ReadOkResponse;
+import com.github.csutorasa.wiclax.response.ReadOkResponse;
 import lombok.RequiredArgsConstructor;
 
 /**
  * Handles the stop read event and responds with success.
  */
 @RequiredArgsConstructor
-public class StopReadRequestHandler extends WiclaxRequestHandler {
+public class StopReadRequestHandler implements WiclaxRequestHandler {
     private static final String DEFAULT_COMMAND = "STOPREAD";
 
     private final WiclaxProtocolOptions protocolOptions;
     private final StopReadHandler handler;
+    private final ResponseSender responseSender;
 
     @Override
     public boolean supports(String command, String data) {
@@ -22,8 +23,8 @@ public class StopReadRequestHandler extends WiclaxRequestHandler {
     }
 
     @Override
-    public void handle(WiclaxClientConnection clientConnection, String data) {
+    public void handle(String data) {
         handler.run();
-        send(clientConnection, new ReadOkResponse());
+        responseSender.send(new ReadOkResponse());
     }
 }

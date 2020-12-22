@@ -1,5 +1,6 @@
 package com.github.csutorasa.wiclax.message;
 
+import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,7 @@ public class RaceStartMessage extends WiclaxMessage {
     private Instant dateTime;
 
     @Override
-    public String toData() {
+    public String toData(WiclaxProtocolOptions protocolOptions) {
         return "RACESTART " + WiclaxDateFormatters.TIME_WITH_MILLIS_FORMATTER.format(dateTime);
     }
 }

@@ -1,5 +1,6 @@
-package com.github.csutorasa.wiclax.message
+package com.github.csutorasa.wiclax.response
 
+import com.github.csutorasa.wiclax.response.ClockResponse
 import spock.lang.Specification
 
 import java.time.LocalDateTime

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  * First message of the connection. Requires no actions.
  */
 @RequiredArgsConstructor
-public class InitializationRequestHandler extends WiclaxRequestHandler {
+public class InitializationRequestHandler implements WiclaxRequestHandler {
     private static final String DEFAULT_COMMAND = "HELLO";
 
     private final WiclaxProtocolOptions protocolOptions;
@@ -20,7 +20,7 @@ public class InitializationRequestHandler extends WiclaxRequestHandler {
     }
 
     @Override
-    public void handle(WiclaxClientConnection clientConnection, String data) {
+    public void handle(String data) {
         // Connection is up
     }
 }

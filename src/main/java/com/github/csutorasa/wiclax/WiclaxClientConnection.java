@@ -2,7 +2,9 @@ package com.github.csutorasa.wiclax;
 
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
+import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -27,6 +29,7 @@ public class WiclaxClientConnection implements Closeable {
 
     @Getter
     private final WiclaxClock clock;
+    @Getter
     private final WiclaxProtocolOptions protocolOptions;
     private final Socket socket;
     private final BufferedReader inputStream;
@@ -55,20 +58,30 @@ public class WiclaxClientConnection implements Closeable {
      * @param clientReader client reading logic
      */
     public void startReading(WiclaxClientReader clientReader) {
-        clientReader.startRead(socket, inputStream, this, protocolOptions, () -> readStarted.set(true), () -> readStarted.set(false));
+        clientReader.startRead(socket, inputStream, this, () -> readStarted.set(true), () -> readStarted.set(false));
     }
 
     /**
-     * Sends data to Wiclax.
+     * Sends message to Wiclax.
      * This method is synchronized to the class, so messages from different threads will not conflict.
      *
      * @param message message to be sent
      * @throws IOException thrown if the underlying stream throws an exception
      */
     public synchronized void send(WiclaxMessage message) throws IOException {
-        outputStream.write(message.toData());
+        outputStream.write(message.toData(protocolOptions));
         outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
         outputStream.flush();
+    }
+
+    synchronized void sendResponse(WiclaxResponse response) {
+        try {
+            outputStream.write(response.toData());
+            outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
+            outputStream.flush();
+        } catch (IOException e) {
+            // Ignored
+        }
     }
 
     /**

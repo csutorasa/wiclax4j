@@ -12,12 +12,12 @@ class RewindRequestHandlerTest extends Specification {
 
     def "default works"() {
         setup:
-        requestHandler = new RewindRequestHandler(WiclaxProtocolOptions.DEFAULT_OPTIONS, handler)
+        requestHandler = new RewindRequestHandler(WiclaxProtocolOptions.defaults(), handler)
         String data = "03-12-2007 10:15:30 03-12-2007 10:15:30"
         1 * handler.accept(_, _)
         expect:
         requestHandler.supports("REWIND", data)
-        requestHandler.handle(connection, data)
+        requestHandler.handle(data)
     }
 
     def "custom works"() {
@@ -28,6 +28,6 @@ class RewindRequestHandlerTest extends Specification {
         1 * handler.accept(_, _)
         expect:
         requestHandler.supports(customCommand, data)
-        requestHandler.handle(connection, data)
+        requestHandler.handle(data)
     }
 }

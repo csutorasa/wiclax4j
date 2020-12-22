@@ -19,6 +19,14 @@ public class WiclaxProtocolOptions {
     public static final WiclaxProtocolOptions DEFAULT_OPTIONS = WiclaxProtocolOptions.builder().build();
 
     /**
+     * Default generic options.
+     * @return protocol options
+     */
+    public static WiclaxProtocolOptions defaults() {
+        return DEFAULT_OPTIONS;
+    }
+
+    /**
      * Default port to use for incoming connections.
      */
     private final Integer defaultTCPPort;
