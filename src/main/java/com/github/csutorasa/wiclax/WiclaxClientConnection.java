@@ -4,6 +4,7 @@ import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import com.github.csutorasa.wiclax.response.WiclaxResponse;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -12,6 +13,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
@@ -30,13 +33,27 @@ public class WiclaxClientConnection implements Closeable {
     private final WiclaxClock clock;
     @Getter
     private final WiclaxProtocolOptions protocolOptions;
+    @Getter(AccessLevel.PACKAGE)
     private final Socket socket;
-    private final BufferedReader inputStream;
-    private final BufferedWriter outputStream;
+    @Getter(AccessLevel.PACKAGE)
+    private final Reader inputStream;
+    private final Writer outputStream;
     private final AtomicBoolean readStarted = new AtomicBoolean(false);
 
+
     /**
-     * Creates a new client connection
+     * Creates a new client connection.
+     *
+     * @param socket          client socket
+     * @param protocolOptions protocol options
+     * @throws IOException if the socket or stream throws and exception
+     */
+    public WiclaxClientConnection(Socket socket, WiclaxProtocolOptions protocolOptions) throws IOException {
+        this(socket, protocolOptions, new WiclaxClock());
+    }
+
+    /**
+     * Creates a new client connection.
      *
      * @param socket          client socket
      * @param protocolOptions protocol options
@@ -57,7 +74,16 @@ public class WiclaxClientConnection implements Closeable {
      * @param clientReader client reading logic
      */
     public void startReading(WiclaxClientReader clientReader) {
-        clientReader.startRead(socket, inputStream, this, () -> readStarted.set(true), () -> readStarted.set(false));
+        clientReader.startRead(this, () -> readStarted.set(true), () -> readStarted.set(false));
+    }
+
+    /**
+     * Starts writing to the client.
+     *
+     * @param heartbeatWriter heartbeat writing logic
+     */
+    public void startHeartbeatWriting(WiclaxHeartbeatWriter heartbeatWriter) {
+        heartbeatWriter.startWrite(this, this::send);
     }
 
     /**
@@ -73,14 +99,10 @@ public class WiclaxClientConnection implements Closeable {
         outputStream.flush();
     }
 
-    synchronized void sendResponse(WiclaxResponse response) {
-        try {
-            outputStream.write(response.toData());
-            outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
-            outputStream.flush();
-        } catch (IOException e) {
-            // Ignored
-        }
+    synchronized void send(WiclaxResponse response) throws IOException {
+        outputStream.write(response.toData());
+        outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
+        outputStream.flush();
     }
 
     /**
@@ -112,8 +134,8 @@ public class WiclaxClientConnection implements Closeable {
 
     @Override
     public void close() throws IOException {
+        socket.close();
         inputStream.close();
         outputStream.close();
-        socket.close();
     }
 }

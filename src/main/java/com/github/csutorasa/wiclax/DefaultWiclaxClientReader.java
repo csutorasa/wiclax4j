@@ -3,17 +3,23 @@ package com.github.csutorasa.wiclax;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.exception.ErrorHandler;
 import com.github.csutorasa.wiclax.exception.UnhandledRequestException;
-import com.github.csutorasa.wiclax.request.RewindHandler;
-import com.github.csutorasa.wiclax.request.StartReadHandler;
-import com.github.csutorasa.wiclax.request.StopReadHandler;
-import com.github.csutorasa.wiclax.request.WiclaxRequestHandlers;
+import com.github.csutorasa.wiclax.exception.UnparseableRequestException;
+import com.github.csutorasa.wiclax.request.WiclaxRequest;
+import com.github.csutorasa.wiclax.requesthandler.RewindHandler;
+import com.github.csutorasa.wiclax.requesthandler.StartReadHandler;
+import com.github.csutorasa.wiclax.requesthandler.StopReadHandler;
+import com.github.csutorasa.wiclax.requesthandler.WiclaxRequestHandlers;
+import com.github.csutorasa.wiclax.requestparser.WiclaxRequestParsers;
+import com.github.csutorasa.wiclax.response.ResponseSender;
+import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.RequiredArgsConstructor;
 
-import java.io.BufferedReader;
+import java.io.Reader;
 import java.net.Socket;
 import java.time.Instant;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -23,8 +29,9 @@ import java.util.regex.Pattern;
 public class DefaultWiclaxClientReader extends WiclaxClientReader {
 
     private final RewindHandler rewindHandler;
-    private final BiConsumer<String, String> unhandledRequest;
-    private final ErrorHandler<Exception> unhandledProcessingException;
+    private final BiConsumer<String, String> unparseableRequest;
+    private final Consumer<WiclaxRequest> unhandledRequest;
+    private final ErrorHandler<Exception> unhandledRequestErrorHandler;
     private final ErrorHandler<Throwable> threadException;
 
     /**
@@ -34,33 +41,40 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
      */
     public DefaultWiclaxClientReader(RewindHandler rewindHandler) {
         this.rewindHandler = rewindHandler;
-        unhandledRequest = (command, data) -> {
+        unparseableRequest = (command, data) -> {
         };
-        unhandledProcessingException = (exception) -> {
+        unhandledRequest = request -> {
+        };
+        unhandledRequestErrorHandler = exception -> {
         };
         threadException = ErrorHandler.rethrow();
     }
 
     @Override
-    protected void startRead(Socket socket, BufferedReader inputStream, WiclaxClientConnection clientConnection,
-                             StartReadHandler startReadHandler, StopReadHandler stopReadHandler) {
+    protected void startRead(WiclaxClientConnection clientConnection, StartReadHandler startReadHandler,
+                             StopReadHandler stopReadHandler) {
+        Socket socket = clientConnection.getSocket();
+        Reader inputStream = clientConnection.getInputStream();
         WiclaxRequestHandlers requestHandlers = WiclaxRequestHandlers.fromAllHandlers(clientConnection,
-                clientConnection::sendResponse, startReadHandler, stopReadHandler, this::rewindHandler);
-        Thread readerThread = new Thread(() -> reader(socket, inputStream, clientConnection.getProtocolOptions(), requestHandlers));
+                startReadHandler, stopReadHandler, this::rewindHandler);
+        WiclaxRequestParsers requestParsers = WiclaxRequestParsers.fromAllParsers(clientConnection);
+        Thread readerThread = new Thread(() -> reader(socket, inputStream, clientConnection.getProtocolOptions(),
+                requestHandlers, requestParsers, clientConnection::send));
         readerThread.setName("Wiclax input reader for " + socket.getRemoteSocketAddress().toString());
         readerThread.start();
     }
 
-    private void reader(Socket socket, BufferedReader inputStream, WiclaxProtocolOptions protocolOptions,
-                        WiclaxRequestHandlers requestHandlers) {
+    private void reader(Socket socket, Reader inputStream, WiclaxProtocolOptions protocolOptions,
+                        WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
+                        ResponseSender responseSender) {
         Scanner scanner = new Scanner(inputStream);
-        String delimiter = protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
+        String delimiter = getCommandEndString(protocolOptions);
         scanner.useDelimiter(Pattern.compile(delimiter));
         while (!socket.isClosed()) {
             try {
                 while (scanner.hasNext()) {
                     String line = scanner.next();
-                    processLine((command, data) -> processRequest(requestHandlers, command, data), line);
+                    processLine(request -> processRequest(requestHandlers, responseSender, request), requestParsers, line);
                 }
             } catch (Throwable t) {
                 threadException(t);
@@ -68,11 +82,16 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
         }
     }
 
-    private void processRequest(WiclaxRequestHandlers requestHandlers, String command, String data) {
+    private void processRequest(WiclaxRequestHandlers requestHandlers, ResponseSender responseSender, WiclaxRequest request) {
         try {
-            requestHandlers.handle(command, data);
+            WiclaxResponse response = requestHandlers.handle(request);
+            if (response != null) {
+                responseSender.send(response);
+            }
+        } catch (UnparseableRequestException e) {
+            unparseableRequest(e.getCommand(), e.getData());
         } catch (UnhandledRequestException e) {
-            unhandledRequest(e.getCommand(), e.getData());
+            unhandledRequest(e.getRequest());
         } catch (Exception e) {
             unhandledProcessingException(e);
         }
@@ -90,13 +109,22 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
     }
 
     /**
-     * Dispatches the unhandled request exceptions.
+     * Dispatches the unparseable request exceptions.
      *
      * @param command request command
      * @param data    request data
      */
-    protected void unhandledRequest(String command, String data) {
-        unhandledRequest.accept(command, data);
+    protected void unparseableRequest(String command, String data) {
+        unparseableRequest.accept(command, data);
+    }
+
+    /**
+     * Dispatches the unhandled request exceptions.
+     *
+     * @param request request
+     */
+    protected void unhandledRequest(WiclaxRequest request) {
+        unhandledRequest.accept(request);
     }
 
     /**
@@ -105,7 +133,7 @@ public class DefaultWiclaxClientReader extends WiclaxClientReader {
      * @param exception any exception that happened during request handling
      */
     protected void unhandledProcessingException(Exception exception) {
-        unhandledProcessingException.handle(exception);
+        unhandledRequestErrorHandler.handle(exception);
     }
 
     /**

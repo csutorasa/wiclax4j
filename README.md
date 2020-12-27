@@ -14,6 +14,7 @@ from [here](https://search.maven.org/artifact/com.github.csutorasa.wiclax4j/wicl
 package org.example;
 
 import com.github.csutorasa.wiclax.DefaultWiclaxClientReader;
+import com.github.csutorasa.wiclax.DefaultWiclaxHeartbeatWriter;
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.WiclaxServerSocket;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
@@ -34,14 +35,12 @@ public class WiclaxExample {
         WiclaxClientConnection connection = wiclaxServerSocket.accept();
         // Start reading requests from the client
         connection.startReading(new DefaultWiclaxClientReader(WiclaxExample::rewind));
+        // Start writing heartbeat messages
+        connection.startHeartbeatWriting(new DefaultWiclaxHeartbeatWriter());
         // Send an acquisition
-        Acquisition acquisition = Acquisition.builder().chipId("chip").detectionTime(Instant.now()).build();
+        Acquisition acquisition = Acquisition.builder().deviceId("301").chipId("123").detectionTime(Instant.now()).build();
         connection.send(new AcquisitionMessage(acquisition));
         // Do some work
-        Thread.sleep(15000);
-        // Send a heartbeat to the client
-        connection.send(new HeartBeatMessage());
-        // Do some other work
         Thread.sleep(15000);
         // Close connections, preferably in finally clause.
         connection.close();
@@ -69,22 +68,30 @@ included in the project.
 
 ### Requests
 
-All requests, that you would like to handle, need [request handlers](src/main/java/com/github/csutorasa/wiclax/request).
-To create a new handler you need to create a subclass
-of [WiclaxRequestHandler](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequestHandler.java). Overriding
-the `supports(String command, String data)` allows handling the requests.
+Requests need to be parsed first. [Request parsers](src/main/java/com/github/csutorasa/wiclax/requestparser)
+are extending the [WiclaxRequestParser](src/main/java/com/github/csutorasa/wiclax/requestparser/WiclaxRequestParser.java).
+They must describe what requests they can support.
+
+Parsers create [requests](src/main/java/com/github/csutorasa/wiclax/request) that extend the
+[WiclaxRequest](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequest.java).
+These objects store the information about the request.
+
+After the request is parsed [request handlers](src/main/java/com/github/csutorasa/wiclax/request) must be added
+that extend [WiclaxRequestHandler](src/main/java/com/github/csutorasa/wiclax/requesthandler/WiclaxRequestHandler.java).
+They must describe what requests they can support.
+It can return a response which will be sent to the client.
 
 ### Responses
 
 All [responses](src/main/java/com/github/csutorasa/wiclax/response) need to implement
-the [WiclaxResponse](src/main/java/com/github/csutorasa/wiclax/response/WiclaxResponse.java).
-To create a new response you need to override the `toData()` method and return the text to be sent to the client.
+the [WiclaxResponse](src/main/java/com/github/csutorasa/wiclax/response/WiclaxResponse.java). To create a new response
+you need to override the `toData()` method and return the text to be sent to the client.
 
 ### Messages
 
 All [messages](src/main/java/com/github/csutorasa/wiclax/message) need to implement
-the [WiclaxMessage](src/main/java/com/github/csutorasa/wiclax/message/WiclaxMessage.java).
-To create a new message you need to override the `toData(WiclaxProtocolOptions)` method and return the text to be sent to the client.
+the [WiclaxMessage](src/main/java/com/github/csutorasa/wiclax/message/WiclaxMessage.java). To create a new message you
+need to override the `toData(WiclaxProtocolOptions)` method and return the text to be sent to the client.
 
 ### Clock
 

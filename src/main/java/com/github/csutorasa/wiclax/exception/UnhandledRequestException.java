@@ -1,5 +1,6 @@
 package com.github.csutorasa.wiclax.exception;
 
+import com.github.csutorasa.wiclax.request.WiclaxRequest;
 import lombok.Getter;
 
 /**
@@ -8,23 +9,17 @@ import lombok.Getter;
 @Getter
 public class UnhandledRequestException extends RuntimeException {
     /**
-     * Request command
+     * Request
      */
-    private final String command;
-    /**
-     * Request data
-     */
-    private final String data;
+    private final WiclaxRequest request;
 
     /**
-     * Creates a new Exception from the command and data
+     * Creates a new Exception from the request
      *
-     * @param command request command
-     * @param data    request data
+     * @param request request
      */
-    public UnhandledRequestException(String command, String data) {
-        super("Unhandled request: " + command + " " + data);
-        this.command = command;
-        this.data = data;
+    public UnhandledRequestException(WiclaxRequest request) {
+        super("Unhandled request: " + request.toString());
+        this.request = request;
     }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Server socket for Wiclax clients.
@@ -63,15 +64,15 @@ public class WiclaxServerSocket implements Closeable {
     }
 
     /**
-     * Listens for a client and accepts it. Creates the connection with a custom clock.
+     * Listens for a client and accepts it.
      *
-     * @param clock custom clock
+     * @param generator client connection generator
      * @return client connection
      * @throws IOException thrown if the {@link ServerSocket#accept()} throws an exception
      */
-    public WiclaxClientConnection accept(WiclaxClock clock) throws IOException {
+    public WiclaxClientConnection accept(BiFunction<Socket, WiclaxProtocolOptions, WiclaxClientConnection> generator) throws IOException {
         Socket socket = serverSocket.accept();
-        return new WiclaxClientConnection(socket, protocolOptions, clock);
+        return generator.apply(socket, protocolOptions);
     }
 
     /**
