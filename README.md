@@ -57,7 +57,7 @@ public class WiclaxExample {
 First it is recommended to get to know to the [protocol specification](docs/protocol.md)
 and [custom protocol options and configuration](docs/acquisitiontype.md).
 
-#### Reader
+### Reader
 
 To read from clients you can use any implementation
 of [WiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/WiclaxClientReader.java). There is a default
