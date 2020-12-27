@@ -6,7 +6,7 @@ import lombok.Getter;
  * Exception that is thrown when no request parser can parse the request.
  */
 @Getter
-public class UnparseableRequestException extends RuntimeException {
+public class UnparseableRequestException extends Exception {
     /**
      * Request command
      */

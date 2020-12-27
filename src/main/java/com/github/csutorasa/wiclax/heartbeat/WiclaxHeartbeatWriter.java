@@ -1,16 +1,17 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.heartbeat;
 
+import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.message.MessageSender;
 
 /**
  * Heartbeat writer base for a Wiclax client.
  */
-public abstract class WiclaxHeartbeatWriter {
+public interface WiclaxHeartbeatWriter {
     /**
      * Starts writing heartbeat messages.
      *
      * @param clientConnection client connection
      * @param messageSender    message sender function
      */
-    public abstract void startWrite(WiclaxClientConnection clientConnection, MessageSender messageSender);
+    void startWrite(WiclaxClientConnection clientConnection, MessageSender messageSender);
 }

@@ -45,11 +45,21 @@ public class WiclaxRequestParsers {
     /**
      * Parses a request.
      *
-     * @param command request command
-     * @param data    request data
+     * @param line request command line
      * @return request object
+     * @throws UnparseableRequestException if no parsers support the request
      */
-    public WiclaxRequest parse(String command, String data) {
+    public WiclaxRequest parse(String line) throws UnparseableRequestException {
+        int indexOfFirstSpace = line.indexOf(" ");
+        String command;
+        String data;
+        if (indexOfFirstSpace < 0) {
+            command = line;
+            data = "";
+        } else {
+            command = line.substring(0, indexOfFirstSpace);
+            data = line.substring(indexOfFirstSpace + 1);
+        }
         WiclaxRequestParser parser = parsers.stream().filter(h -> h.supports(command, data)).findFirst().orElseThrow(() ->
                 new UnparseableRequestException(command, data));
         return parser.parse(data);

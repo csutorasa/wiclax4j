@@ -6,7 +6,6 @@ import com.github.csutorasa.wiclax.model.Acquisition;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.util.Optional;
 
@@ -14,7 +13,6 @@ import java.util.Optional;
  * Message which contains an acquisition.
  */
 @Getter
-@Setter
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class AcquisitionMessage extends WiclaxMessage {

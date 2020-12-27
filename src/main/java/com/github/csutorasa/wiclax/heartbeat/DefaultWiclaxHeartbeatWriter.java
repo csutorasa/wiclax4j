@@ -1,17 +1,16 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.heartbeat;
 
+import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.exception.ErrorHandler;
 import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 import com.github.csutorasa.wiclax.message.MessageSender;
 import lombok.RequiredArgsConstructor;
 
-import java.net.Socket;
-
 /**
  * Default reader implementation. The socket is read until it is closed.
  */
 @RequiredArgsConstructor
-public class DefaultWiclaxHeartbeatWriter extends WiclaxHeartbeatWriter {
+public class DefaultWiclaxHeartbeatWriter implements WiclaxHeartbeatWriter {
 
     private final long intervalMillis;
     private final ErrorHandler<Exception> unhandledSendingException;
@@ -38,21 +37,26 @@ public class DefaultWiclaxHeartbeatWriter extends WiclaxHeartbeatWriter {
 
     @Override
     public void startWrite(WiclaxClientConnection clientConnection, MessageSender messageSender) {
-        Socket socket = clientConnection.getSocket();
-        Thread writerThread = new Thread(() -> writer(socket, messageSender));
-        writerThread.setName("Wiclax heartbeat writer for " + socket.getRemoteSocketAddress().toString());
+        Thread writerThread = new Thread(() -> writer(messageSender));
+        writerThread.setName("Wiclax heartbeat writer for " + clientConnection.getRemoteSocketAddress().toString());
         writerThread.start();
     }
 
-    private void writer(Socket socket, MessageSender messageSender) {
-        while (!socket.isClosed()) {
-            try {
-                sendMessage(messageSender);
-                Thread.sleep(intervalMillis);
-            } catch (Throwable t) {
-                threadException(t);
-            }
+    private void writer(MessageSender messageSender) {
+        boolean exit = false;
+        while (!exit) {
+            exit = send(messageSender);
         }
+    }
+
+    private boolean send(MessageSender messageSender) {
+        try {
+            sendMessage(messageSender);
+            Thread.sleep(intervalMillis);
+        } catch (Throwable t) {
+            threadException(t);
+        }
+        return false;
     }
 
     private void sendMessage(MessageSender messageSender) {

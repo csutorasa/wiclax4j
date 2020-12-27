@@ -2,9 +2,9 @@ package com.github.csutorasa.wiclax;
 
 import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.heartbeat.WiclaxHeartbeatWriter;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
 import com.github.csutorasa.wiclax.response.WiclaxResponse;
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.io.BufferedReader;
@@ -13,13 +13,14 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * Single connection to a Wiclax client.
@@ -27,19 +28,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class WiclaxClientConnection implements Closeable {
 
     private static final String DEFAULT_IN_COMMAND_END_CHARS = "\r";
+    private static final String DEFAULT_OUT_COMMAND_END_CHARS = "\r";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     @Getter
     private final WiclaxClock clock;
     @Getter
     private final WiclaxProtocolOptions protocolOptions;
-    @Getter(AccessLevel.PACKAGE)
     private final Socket socket;
-    @Getter(AccessLevel.PACKAGE)
-    private final Reader inputStream;
+    private final Scanner inputScanner;
     private final Writer outputStream;
     private final AtomicBoolean readStarted = new AtomicBoolean(false);
-
+    private final Object writeLock = new Object();
+    private final Object readLock = new Object();
 
     /**
      * Creates a new client connection.
@@ -64,7 +65,10 @@ public class WiclaxClientConnection implements Closeable {
         this.socket = socket;
         this.protocolOptions = protocolOptions;
         this.clock = clock;
-        inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream(), CHARSET));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), CHARSET));
+        String delimiter = protocolOptions.get(WiclaxProtocolOptions::getOutCommandEndChars).orElse(DEFAULT_OUT_COMMAND_END_CHARS);
+        inputScanner = new Scanner(reader);
+        inputScanner.useDelimiter(Pattern.compile(delimiter));
         outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), CHARSET));
     }
 
@@ -74,7 +78,7 @@ public class WiclaxClientConnection implements Closeable {
      * @param clientReader client reading logic
      */
     public void startReading(WiclaxClientReader clientReader) {
-        clientReader.startRead(this, () -> readStarted.set(true), () -> readStarted.set(false));
+        clientReader.startRead(this, this::read, this::send, () -> readStarted.set(true), () -> readStarted.set(false));
     }
 
     /**
@@ -94,15 +98,32 @@ public class WiclaxClientConnection implements Closeable {
      * @throws IOException thrown if the underlying stream throws an exception
      */
     public synchronized void send(WiclaxMessage message) throws IOException {
-        outputStream.write(message.toData(protocolOptions));
-        outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
-        outputStream.flush();
+        send(message.toData(protocolOptions));
     }
 
-    synchronized void send(WiclaxResponse response) throws IOException {
-        outputStream.write(response.toData());
-        outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
-        outputStream.flush();
+    void send(WiclaxResponse response) throws IOException {
+        send(response.toData());
+    }
+
+    private void send(String data) throws IOException {
+        synchronized (writeLock) {
+            outputStream.write(data);
+            outputStream.write(protocolOptions.get(WiclaxProtocolOptions::getInCommandEndChars).orElse(DEFAULT_IN_COMMAND_END_CHARS));
+            outputStream.flush();
+        }
+    }
+
+    private String read() {
+        if (socket.isClosed()) {
+            return null;
+        }
+        synchronized (readLock) {
+            if (inputScanner.hasNext()) {
+                return inputScanner.next();
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
@@ -135,7 +156,7 @@ public class WiclaxClientConnection implements Closeable {
     @Override
     public void close() throws IOException {
         socket.close();
-        inputStream.close();
+        inputScanner.close();
         outputStream.close();
     }
 }

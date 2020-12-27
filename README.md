@@ -14,12 +14,11 @@ from [here](https://search.maven.org/artifact/com.github.csutorasa.wiclax4j/wicl
 package org.example;
 
 import com.github.csutorasa.wiclax.DefaultWiclaxClientReader;
-import com.github.csutorasa.wiclax.DefaultWiclaxHeartbeatWriter;
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.WiclaxServerSocket;
+import com.github.csutorasa.wiclax.WiclaxServerSocketTest;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
+import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriter;
 import com.github.csutorasa.wiclax.message.AcquisitionMessage;
-import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 import com.github.csutorasa.wiclax.model.Acquisition;
 
 import java.io.IOException;
@@ -69,17 +68,17 @@ included in the project.
 ### Requests
 
 Requests need to be parsed first. [Request parsers](src/main/java/com/github/csutorasa/wiclax/requestparser)
-are extending the [WiclaxRequestParser](src/main/java/com/github/csutorasa/wiclax/requestparser/WiclaxRequestParser.java).
-They must describe what requests they can support.
+are extending
+the [WiclaxRequestParser](src/main/java/com/github/csutorasa/wiclax/requestparser/WiclaxRequestParser.java). They must
+describe what requests they can support.
 
 Parsers create [requests](src/main/java/com/github/csutorasa/wiclax/request) that extend the
-[WiclaxRequest](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequest.java).
-These objects store the information about the request.
+[WiclaxRequest](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequest.java). These objects store the
+information about the request.
 
-After the request is parsed [request handlers](src/main/java/com/github/csutorasa/wiclax/request) must be added
-that extend [WiclaxRequestHandler](src/main/java/com/github/csutorasa/wiclax/requesthandler/WiclaxRequestHandler.java).
-They must describe what requests they can support.
-It can return a response which will be sent to the client.
+After the request is parsed [request handlers](src/main/java/com/github/csutorasa/wiclax/request) must be added that
+extend [WiclaxRequestHandler](src/main/java/com/github/csutorasa/wiclax/requesthandler/WiclaxRequestHandler.java). They
+must describe what requests they can support. It can return a response which will be sent to the client.
 
 ### Responses
 

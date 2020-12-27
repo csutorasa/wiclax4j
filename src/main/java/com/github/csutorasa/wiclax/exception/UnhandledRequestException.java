@@ -7,7 +7,7 @@ import lombok.Getter;
  * Exception that is thrown when no request handler can process the request.
  */
 @Getter
-public class UnhandledRequestException extends RuntimeException {
+public class UnhandledRequestException extends Exception {
     /**
      * Request
      */

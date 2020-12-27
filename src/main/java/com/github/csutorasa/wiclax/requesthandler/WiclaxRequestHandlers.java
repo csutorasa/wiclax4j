@@ -55,8 +55,9 @@ public class WiclaxRequestHandlers {
      *
      * @param request request
      * @return response to be sent or null
+     * @throws UnhandledRequestException if no handlers support the request
      */
-    public WiclaxResponse handle(WiclaxRequest request) {
+    public WiclaxResponse handle(WiclaxRequest request) throws UnhandledRequestException {
         WiclaxRequestHandler handler = handlers.stream().filter(h -> h.supports(request)).findFirst().orElseThrow(() ->
                 new UnhandledRequestException(request));
         return handler.handle(request);

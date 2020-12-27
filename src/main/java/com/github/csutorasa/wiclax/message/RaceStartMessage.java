@@ -2,11 +2,9 @@ package com.github.csutorasa.wiclax.message;
 
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.formatter.WiclaxDateFormatters;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
@@ -14,13 +12,11 @@ import java.time.Instant;
  * Message to mark the start of the race.
  */
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RaceStartMessage extends WiclaxMessage {
 
-    private Instant dateTime;
+    private final Instant dateTime;
 
     @Override
     public String toData(WiclaxProtocolOptions protocolOptions) {
