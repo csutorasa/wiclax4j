@@ -18,7 +18,7 @@ import java.time.Instant
 class IntegrationSmokeTest extends Specification {
 
     PollingConditions conditions = new PollingConditions()
-    WiclaxProtocolOptions options = AcquisitionTypeGenerator.options
+    WiclaxProtocolOptions options = Options.options
     WiclaxServerSocket wiclaxServerSocket = new WiclaxServerSocket(options)
 
     @Ignore
