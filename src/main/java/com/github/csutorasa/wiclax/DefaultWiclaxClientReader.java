@@ -14,7 +14,6 @@ import com.github.csutorasa.wiclax.response.ResponseSender;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
 public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
 
     private final RewindHandler rewindHandler;
-    private final BiConsumer<String, String> unparseableRequest;
+    private final Consumer<String> unparseableRequest;
     private final Consumer<WiclaxRequest> unhandledRequest;
     private final ErrorHandler<Exception> unhandledRequestErrorHandler;
     private final ErrorHandler<Throwable> threadException;
@@ -36,7 +35,7 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
      */
     public DefaultWiclaxClientReader(RewindHandler rewindHandler) {
         this.rewindHandler = rewindHandler;
-        unparseableRequest = (command, data) -> {
+        unparseableRequest = request -> {
         };
         unhandledRequest = request -> {
         };
@@ -80,7 +79,7 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
         try {
             readAndProcessRequest(requestHandlers, requestParsers, requestReader, responseSender);
         } catch (UnparseableRequestException e) {
-            unparseableRequest(e.getCommand(), e.getData());
+            unparseableRequest(e.getRequestLine());
         } catch (UnhandledRequestException e) {
             unhandledRequest(e.getRequest());
         } catch (Exception e) {
@@ -102,11 +101,10 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
     /**
      * Dispatches the unparseable request exceptions.
      *
-     * @param command request command
-     * @param data    request data
+     * @param request request line
      */
-    protected void unparseableRequest(String command, String data) {
-        unparseableRequest.accept(command, data);
+    protected void unparseableRequest(String request) {
+        unparseableRequest.accept(request);
     }
 
     /**

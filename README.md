@@ -69,8 +69,7 @@ included in the project.
 
 Requests need to be parsed first. [Request parsers](src/main/java/com/github/csutorasa/wiclax/requestparser)
 are extending
-the [WiclaxRequestParser](src/main/java/com/github/csutorasa/wiclax/requestparser/WiclaxRequestParser.java). They must
-describe what requests they can support.
+the [WiclaxRequestParser](src/main/java/com/github/csutorasa/wiclax/requestparser/WiclaxRequestParser.java).
 
 Parsers create [requests](src/main/java/com/github/csutorasa/wiclax/request) that extend the
 [WiclaxRequest](src/main/java/com/github/csutorasa/wiclax/request/WiclaxRequest.java). These objects store the

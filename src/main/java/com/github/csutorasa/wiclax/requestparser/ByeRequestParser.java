@@ -10,12 +10,10 @@ public class ByeRequestParser implements WiclaxRequestParser {
     private static final String COMMAND = "BYE";
 
     @Override
-    public boolean supports(String command, String data) {
-        return COMMAND.equals(command);
-    }
-
-    @Override
-    public WiclaxRequest parse(String data) {
-        return new ByeRequest();
+    public WiclaxRequest parse(String request) {
+        if (COMMAND.equals(request)) {
+            return new ByeRequest();
+        }
+        return null;
     }
 }

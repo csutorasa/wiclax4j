@@ -46,6 +46,7 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
      * @param outCommandEndChars        end of command sent by the client
      * @param commandsForInitialization initialization command
      * @param getClockCommand           get clock command
+     * @param getClockResponse          get clock response
      * @param setClockCommand           set clock command
      * @param rewindCommand             rewind command
      * @param startReadCommand          start read command
@@ -56,11 +57,11 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
     public WiclaxAcquisitionConfiguration(Integer defaultTCPPort, Boolean withHeartbeat, String heartbeatValue,
                                           String passingDataSeparator, String passingDataMask, String inCommandEndChars,
                                           String outCommandEndChars, String commandsForInitialization, String getClockCommand,
-                                          String setClockCommand, String rewindCommand, String startReadCommand,
-                                          String stopReadCommand, String name, byte[] icon) {
+                                          String getClockResponse, String setClockCommand, String rewindCommand,
+                                          String startReadCommand, String stopReadCommand, String name, byte[] icon) {
         super(defaultTCPPort, withHeartbeat, heartbeatValue, passingDataSeparator, passingDataMask, inCommandEndChars,
-                outCommandEndChars, commandsForInitialization, getClockCommand, setClockCommand, rewindCommand,
-                startReadCommand, stopReadCommand);
+                outCommandEndChars, commandsForInitialization, getClockCommand, getClockResponse, setClockCommand,
+                rewindCommand, startReadCommand, stopReadCommand);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
@@ -72,26 +73,16 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
      * Creates a configuration from existing options.
      *
      * @param protocolOptions protocol options
-     * @param name            name and IDof the configuration
+     * @param name            name and ID of the configuration
      * @param icon            icon data 32x32 png image
-     * @return new configuration
      */
-    public static WiclaxAcquisitionConfiguration fromOptions(WiclaxProtocolOptions protocolOptions, String name, byte[] icon) {
-        return new WiclaxAcquisitionConfiguration(
-                protocolOptions.getDefaultTCPPort(),
-                protocolOptions.getWithHeartbeat(),
-                protocolOptions.getHeartbeatValue(),
-                protocolOptions.getPassingDataSeparator(),
-                protocolOptions.getPassingDataMask(),
-                protocolOptions.getInCommandEndChars(),
-                protocolOptions.getOutCommandEndChars(),
-                protocolOptions.getCommandsForInitialization(),
-                protocolOptions.getGetClockCommand(),
-                protocolOptions.getSetClockCommand(),
-                protocolOptions.getRewindCommand(),
-                protocolOptions.getStartReadCommand(),
-                protocolOptions.getStopReadCommand(),
-                name, icon);
+    public WiclaxAcquisitionConfiguration(WiclaxProtocolOptions protocolOptions, String name, byte[] icon) {
+        super(protocolOptions);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        this.name = name;
+        this.icon = icon;
     }
 
     /**
@@ -113,7 +104,7 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
 
         addAttribute(acquisition, "name", getName());
         addAttribute(acquisition, "defaultTCPPort", getDefaultTCPPort());
-        addAttribute(acquisition, "withHeartbeat", BooleanToNumberFormatter.format(getWithHeartbeat()));
+        addAttribute(acquisition, "isWithHeartbeat", BooleanToNumberFormatter.format(getWithHeartbeat()));
         addAttribute(acquisition, "heartbeatValue", getHeartbeatValue());
         addAttribute(acquisition, "passingDataSeparator", getPassingDataSeparator());
         addAttribute(acquisition, "passingDataMask", getPassingDataMask());

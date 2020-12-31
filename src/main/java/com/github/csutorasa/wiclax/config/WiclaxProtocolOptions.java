@@ -64,6 +64,10 @@ public class WiclaxProtocolOptions {
      */
     private final String getClockCommand;
     /**
+     * Get clock response.
+     */
+    private final String getClockResponse;
+    /**
      * Set clock command.
      */
     private final String setClockCommand;
@@ -92,6 +96,7 @@ public class WiclaxProtocolOptions {
      * @param outCommandEndChars        end of command sent by the client
      * @param commandsForInitialization initialization command
      * @param getClockCommand           get clock command
+     * @param getClockResponse          get clock response
      * @param setClockCommand           set clock command
      * @param rewindCommand             rewind command
      * @param startReadCommand          start read command
@@ -100,7 +105,8 @@ public class WiclaxProtocolOptions {
     public WiclaxProtocolOptions(Integer defaultTCPPort, Boolean withHeartbeat, String heartbeatValue,
                                  String passingDataSeparator, String passingDataMask, String inCommandEndChars,
                                  String outCommandEndChars, String commandsForInitialization, String getClockCommand,
-                                 String setClockCommand, String rewindCommand, String startReadCommand, String stopReadCommand) {
+                                 String getClockResponse, String setClockCommand, String rewindCommand,
+                                 String startReadCommand, String stopReadCommand) {
         this.defaultTCPPort = defaultTCPPort;
         this.withHeartbeat = withHeartbeat;
         this.heartbeatValue = heartbeatValue;
@@ -112,17 +118,47 @@ public class WiclaxProtocolOptions {
             throw new IllegalArgumentException("PassingDataMask must contain chip id.");
         }
         this.passingDataMask = passingDataMask;
-        if (inCommandEndChars != null && !"\r".equals(inCommandEndChars) && !"\n".equals(inCommandEndChars)) {
-            throw new IllegalArgumentException("InCommandEndChars must be \\r or \\n.");
+        if (inCommandEndChars == null) {
+            this.inCommandEndChars = null;
+        } else if ("\\r".equals(inCommandEndChars)) {
+            this.inCommandEndChars = "\r";
+        } else if ("\\n".equals(inCommandEndChars)) {
+            this.inCommandEndChars = "\n";
+        } else if ("\\r\\n".equals(inCommandEndChars)) {
+            this.inCommandEndChars = "\r\n";
+        } else {
+            throw new IllegalArgumentException("InCommandEndChars must be \\r, \\n or \\r\\n.");
         }
-        this.inCommandEndChars = inCommandEndChars;
         this.outCommandEndChars = outCommandEndChars;
         this.commandsForInitialization = commandsForInitialization;
         this.getClockCommand = getClockCommand;
+        this.getClockResponse = getClockResponse;
         this.setClockCommand = setClockCommand;
         this.rewindCommand = rewindCommand;
         this.startReadCommand = startReadCommand;
         this.stopReadCommand = stopReadCommand;
+    }
+
+    /**
+     * Creates new protocol options.
+     *
+     * @param protocolOptions existing protocol options
+     */
+    protected WiclaxProtocolOptions(WiclaxProtocolOptions protocolOptions) {
+        defaultTCPPort = protocolOptions.defaultTCPPort;
+        withHeartbeat = protocolOptions.withHeartbeat;
+        heartbeatValue = protocolOptions.heartbeatValue;
+        passingDataSeparator = protocolOptions.passingDataSeparator;
+        passingDataMask = protocolOptions.passingDataMask;
+        inCommandEndChars = protocolOptions.inCommandEndChars;
+        outCommandEndChars = protocolOptions.outCommandEndChars;
+        commandsForInitialization = protocolOptions.commandsForInitialization;
+        getClockCommand = protocolOptions.getClockCommand;
+        getClockResponse = protocolOptions.getClockResponse;
+        setClockCommand = protocolOptions.setClockCommand;
+        rewindCommand = protocolOptions.rewindCommand;
+        startReadCommand = protocolOptions.startReadCommand;
+        stopReadCommand = protocolOptions.stopReadCommand;
     }
 
     /**

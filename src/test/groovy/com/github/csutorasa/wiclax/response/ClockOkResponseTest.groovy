@@ -5,10 +5,10 @@ import spock.lang.Specification
 
 class ClockOkResponseTest extends Specification {
 
-    def message = new ClockOkResponse()
+    def response = new ClockOkResponse()
 
     def "to data works"() {
         expect:
-        "CLOCKOK" == message.toData()
+        "CLOCKOK" == response.toData()
     }
 }

@@ -11,30 +11,20 @@ class StartReadRequestParserTest extends Specification {
 
     def "default works"() {
         given:
-        String command = "STARTREAD"
-        String data = ""
+        String requestLine = "STARTREAD"
         requestParser = new StartReadRequestParser(WiclaxProtocolOptions.defaults())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof StartReadRequest
     }
 
     def "custom works"() {
         given:
-        String command = "TEST"
-        String data = ""
-        requestParser = new StartReadRequestParser(WiclaxProtocolOptions.builder().startReadCommand(command).build())
+        String requestLine = "TEST"
+        requestParser = new StartReadRequestParser(WiclaxProtocolOptions.builder().startReadCommand(requestLine).build())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof StartReadRequest
     }

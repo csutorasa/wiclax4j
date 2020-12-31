@@ -25,19 +25,46 @@ public class WiclaxDateFormatters {
             .withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
 
     /**
-     * Creates a new formatter from the wiclax pattern.
+     * Creates a new formatter from the Wiclax pattern.
      * {@code YYYYMMDDhhmmssccc} format is changed to {@code yyyyMMddHHmmssSSS}.
      *
      * @param pattern wiclax pattern
      * @return formatter
      */
     public static DateTimeFormatter createFormWiclaxPattern(String pattern) {
-        String p = pattern
-                .replaceAll("Y", "y")
-                .replaceAll("D", "d")
-                .replaceAll("h", "H")
-                .replaceAll("c", "S");
-        return DateTimeFormatter.ofPattern(p)
+        StringBuilder p = new StringBuilder();
+        boolean insideApostrophe = false;
+        for (char c : pattern.toCharArray()) {
+            if (c == '\'') {
+                insideApostrophe = !insideApostrophe;
+                p.append(c);
+            } else if (insideApostrophe) {
+                p.append(c);
+            } else if (c == 'Y') {
+                p.append("y");
+            } else if (c == 'D') {
+                p.append("d");
+            } else if (c == 'h') {
+                p.append("H");
+            } else if (c == 'c') {
+                p.append("S");
+            } else {
+                p.append(c);
+            }
+        }
+        return DateTimeFormatter.ofPattern(p.toString())
+                .withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
+    }
+
+    /**
+     * Creates a new formatter from the Wiclax pattern.
+     * {@code yyyyMMddHHmmss} format is changed to {@code yyyyMMddHHmmss}.
+     *
+     * @param pattern pattern
+     * @return formatter
+     */
+    public static DateTimeFormatter createFormWiclaxPattern2(String pattern) {
+        return DateTimeFormatter.ofPattern(pattern)
                 .withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
     }
 }

@@ -78,17 +78,33 @@ Examples:
 
 ### inCommandEndChars
 
-Chars used to indicate the end of a command when sent by the device. Not used, the protocol must use either \r or \n as
-command separator.
+Chars used to indicate the end of a command when sent by the device. Not used, the protocol must use either:
+`\n`, `\r` or `\r\n` as command separator.
 
 ### outCommandEndChars
 
-Optional. Chars used to indicate the end of a command when sent by Wiclax. Defaults to `\r` if not set.
+Optional. Chars used to indicate the end of a command when sent by Wiclax.
+
+Defaults to `\r` if not set.
+
+## isWithHeartBeat
+
+Optional. Sets if the heartbeat messages are expected from the server.
+
+Defaults to `0`.
+
+## heartbeatValue
+
+Optional. Sets the heartbeat message text.
+
+Defaults to `*`.
 
 ### commandsForInitialization
 
 Optional. Set of text commands to send when initiating a connection with the device. The commands must include any end
 char if necessary.
+
+Defaults to `HELLO\r`.
 
 ### getClockCommand
 
@@ -96,17 +112,24 @@ Optional. Command to send to query the clock value of the device.
 
 Defaults to `CLOCK`.
 
+### getClockResponse
+
+Optional. Response to the clock query. The command includes a standard time mask.
+
+Defaults to `CLOCK DD-MM-YYYY hh:mm:ss`.
+
 ### setClockCommand
 
 Optional. Command to send to initialize the device clock. The command includes a standard time mask.
 
-Defaults to `CLOCK YYYY/MM/DD hh:mm:ss`
+Defaults to `'CLOCK' DD-MM-YYYY hh:mm:ss`
 
 ### rewindCommand
 
-Optional. Command to send to ask the device all the passings it has in memory.
+Optional. Command to send to ask the device all the passings it has in memory. The command includes a standard time
+mask.
 
-Defaults to `REWIND`.
+Defaults to `REWIND DD-MM-YYYY hh:mm:ss DD-MM-YYYY hh:mm:ss`.
 
 ### startReadCommand
 

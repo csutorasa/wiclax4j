@@ -10,14 +10,9 @@ class ByeRequestParserTest extends Specification {
 
     def "it works"() {
         given:
-        String command = "BYE"
-        String data = ""
+        String requestLine = "BYE"
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof ByeRequest
     }

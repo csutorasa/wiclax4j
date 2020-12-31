@@ -7,6 +7,8 @@ import com.github.csutorasa.wiclax.request.WiclaxRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Parser for {@link RewindRequest}.
@@ -18,16 +20,24 @@ public class RewindRequestParser implements WiclaxRequestParser {
     private final WiclaxProtocolOptions protocolOptions;
 
     @Override
-    public boolean supports(String command, String data) {
-        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getRewindCommand).orElse(DEFAULT_COMMAND);
-        return expectedCommand.equals(command);
-    }
-
-    @Override
-    public WiclaxRequest parse(String data) {
-        String[] parts = data.split(" ");
-        Instant from = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[0] + " " + parts[1]));
-        Instant to = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[2] + " " + parts[3]));
-        return new RewindRequest(from, to);
+    public WiclaxRequest parse(String request) {
+        Optional<String> rewindCommand = protocolOptions.get(WiclaxProtocolOptions::getRewindCommand);
+        if (rewindCommand.isPresent()) {
+            try {
+                DateTimeFormatter formatter = WiclaxDateFormatters.createFormWiclaxPattern2(rewindCommand.get());
+                return null;
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            String[] parts = request.split(" ");
+            if (DEFAULT_COMMAND.equals(parts[0]) && parts.length == 5) {
+                Instant from = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[1] + " " + parts[2]));
+                Instant to = Instant.from(WiclaxDateFormatters.DATE_TIME_FORMATTER.parse(parts[3] + " " + parts[4]));
+                return new RewindRequest(from, to);
+            } else {
+                return null;
+            }
+        }
     }
 }

@@ -12,16 +12,22 @@ import lombok.RequiredArgsConstructor;
 public class StopReadRequestParser implements WiclaxRequestParser {
     private static final String DEFAULT_COMMAND = "STOPREAD";
 
-    private final WiclaxProtocolOptions protocolOptions;
+    private final String expectedRequest;
 
-    @Override
-    public boolean supports(String command, String data) {
-        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getStopReadCommand).orElse(DEFAULT_COMMAND);
-        return expectedCommand.equals(command);
+    /**
+     * Creates a new parser.
+     *
+     * @param protocolOptions protocol options
+     */
+    public StopReadRequestParser(WiclaxProtocolOptions protocolOptions) {
+        expectedRequest = protocolOptions.get(WiclaxProtocolOptions::getStopReadCommand).orElse(DEFAULT_COMMAND);
     }
 
     @Override
-    public WiclaxRequest parse(String data) {
-        return new StopReadRequest();
+    public WiclaxRequest parse(String request) {
+        if (expectedRequest.equals(request)) {
+            return new StopReadRequest();
+        }
+        return null;
     }
 }

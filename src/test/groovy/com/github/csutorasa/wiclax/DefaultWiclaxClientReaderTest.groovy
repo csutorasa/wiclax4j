@@ -11,7 +11,6 @@ import com.github.csutorasa.wiclax.response.ResponseSender
 import com.github.csutorasa.wiclax.response.WiclaxResponse
 import spock.lang.Specification
 
-import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 class DefaultWiclaxClientReaderTest extends Specification {
@@ -88,8 +87,8 @@ class DefaultWiclaxClientReaderTest extends Specification {
     def "unparseable request exception handling works"() {
         given:
         String requestLine = "test request"
-        Exception exception = new UnparseableRequestException("test", "request")
-        BiConsumer<String, String> handler = Mock()
+        Exception exception = new UnparseableRequestException(requestLine)
+        Consumer<String> handler = Mock()
         def reader = new DefaultWiclaxClientReader(null, handler, null, null, null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
@@ -98,7 +97,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         1 * parsers.parse(requestLine) >> {
             throw exception
         }
-        1 * handler.accept("test", "request")
+        1 * handler.accept(requestLine)
     }
 
     def "thread message exception handling works"() {

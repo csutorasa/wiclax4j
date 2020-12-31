@@ -7,6 +7,7 @@ import com.github.csutorasa.wiclax.request.WiclaxRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Collection of request parsers.
@@ -50,18 +51,7 @@ public class WiclaxRequestParsers {
      * @throws UnparseableRequestException if no parsers support the request
      */
     public WiclaxRequest parse(String line) throws UnparseableRequestException {
-        int indexOfFirstSpace = line.indexOf(" ");
-        String command;
-        String data;
-        if (indexOfFirstSpace < 0) {
-            command = line;
-            data = "";
-        } else {
-            command = line.substring(0, indexOfFirstSpace);
-            data = line.substring(indexOfFirstSpace + 1);
-        }
-        WiclaxRequestParser parser = parsers.stream().filter(h -> h.supports(command, data)).findFirst().orElseThrow(() ->
-                new UnparseableRequestException(command, data));
-        return parser.parse(data);
+        return parsers.stream().map(h -> h.parse(line)).filter(Objects::nonNull).findFirst().orElseThrow(() ->
+                new UnparseableRequestException(line));
     }
 }

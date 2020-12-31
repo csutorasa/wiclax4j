@@ -11,30 +11,20 @@ class StopReadRequestParserTest extends Specification {
 
     def "default works"() {
         given:
-        String command = "STOPREAD"
-        String data = ""
+        String requestLine = "STOPREAD"
         requestParser = new StopReadRequestParser(WiclaxProtocolOptions.defaults())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof StopReadRequest
     }
 
     def "custom works"() {
         given:
-        String command = "TEST"
-        String data = ""
-        requestParser = new StopReadRequestParser(WiclaxProtocolOptions.builder().stopReadCommand(command).build())
+        String requestLine = "TEST"
+        requestParser = new StopReadRequestParser(WiclaxProtocolOptions.builder().stopReadCommand(requestLine).build())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof StopReadRequest
     }

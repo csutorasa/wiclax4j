@@ -6,20 +6,12 @@ import com.github.csutorasa.wiclax.request.WiclaxRequest;
  * Base request parser class.
  */
 public interface WiclaxRequestParser {
-    /**
-     * Gets if the command and the data is supported by this parser.
-     *
-     * @param command request command
-     * @param data    request data
-     * @return true if it is supported
-     */
-    boolean supports(String command, String data);
 
     /**
-     * Parses the request
+     * Parses the request.
      *
-     * @param data request data
-     * @return request object
+     * @param request request line
+     * @return request object or null if not supported
      */
-    WiclaxRequest parse(String data);
+    WiclaxRequest parse(String request);
 }

@@ -12,30 +12,20 @@ class InitializationRequestParserTest extends Specification {
 
     def "default works"() {
         given:
-        String command = "HELLO"
-        String data = ""
+        String requestLine = "HELLO"
         requestParser = new InitializationRequestParser(WiclaxProtocolOptions.defaults())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof InitializationRequest
     }
 
     def "custom works"() {
         given:
-        String command = "TEST"
-        String data = ""
-        requestParser = new InitializationRequestParser(WiclaxProtocolOptions.builder().commandsForInitialization(command).build())
+        String requestLine = "TEST"
+        requestParser = new InitializationRequestParser(WiclaxProtocolOptions.builder().commandsForInitialization(requestLine).build())
         when:
-        boolean supports = requestParser.supports(command, data)
-        then:
-        supports
-        when:
-        WiclaxRequest request = requestParser.parse(data)
+        WiclaxRequest request = requestParser.parse(requestLine)
         then:
         request instanceof InitializationRequest
     }

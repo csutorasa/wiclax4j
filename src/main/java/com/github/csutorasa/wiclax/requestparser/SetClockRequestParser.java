@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Parser for {@link SetClockRequest}.
@@ -19,18 +20,26 @@ public class SetClockRequestParser implements WiclaxRequestParser {
     private final WiclaxProtocolOptions protocolOptions;
 
     @Override
-    public boolean supports(String command, String data) {
-        String expectedCommand = protocolOptions.get(WiclaxProtocolOptions::getSetClockCommand).map(c -> c.split(" ")[0])
-                .orElse(DEFAULT_COMMAND);
-        return expectedCommand.equals(command) && !data.isEmpty();
+    public WiclaxRequest parse(String request) {
+        Optional<String> setClockCommand = protocolOptions.get(WiclaxProtocolOptions::getSetClockCommand);
+        if (setClockCommand.isPresent()) {
+            try {
+                DateTimeFormatter formatter = WiclaxDateFormatters.createFormWiclaxPattern2(setClockCommand.get());
+                return fromFormatterAndData(formatter, request);
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            if (request.startsWith(DEFAULT_COMMAND + " ")) {
+                String data = request.substring(request.indexOf(" ") + 1);
+                return fromFormatterAndData(WiclaxDateFormatters.DATE_TIME_FORMATTER, data);
+            } else {
+                return null;
+            }
+        }
     }
 
-    @Override
-    public WiclaxRequest parse(String data) {
-        DateTimeFormatter formatter = protocolOptions.get(WiclaxProtocolOptions::getSetClockCommand)
-                .map(c -> c.substring(c.indexOf(" ") + 1))
-                .map(WiclaxDateFormatters::createFormWiclaxPattern)
-                .orElse(WiclaxDateFormatters.DATE_TIME_FORMATTER);
+    private SetClockRequest fromFormatterAndData(DateTimeFormatter formatter, String data) {
         Instant dateTime = Instant.from(formatter.parse(data));
         return new SetClockRequest(dateTime);
     }

@@ -32,7 +32,7 @@ public class WiclaxRequestHandlers {
                                                         StopReadHandler stopReadHandler, RewindHandler rewindHandler) {
         List<WiclaxRequestHandler> handlers = new ArrayList<>();
         handlers.add(new ByeRequestHandler());
-        handlers.add(new GetClockRequestHandler(connection.getClock()));
+        handlers.add(new GetClockRequestHandler(connection.getProtocolOptions(), connection.getClock()));
         handlers.add(new InitializationRequestHandler());
         handlers.add(new RewindRequestHandler(rewindHandler));
         handlers.add(new SetClockRequestHandler(connection.getClock()));

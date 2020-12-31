@@ -3,7 +3,6 @@ package com.github.csutorasa.wiclax.smoke
 import com.github.csutorasa.wiclax.DefaultWiclaxClientReader
 import com.github.csutorasa.wiclax.WiclaxClientConnection
 import com.github.csutorasa.wiclax.WiclaxServerSocket
-import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions
 import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriter
 import com.github.csutorasa.wiclax.message.AcquisitionMessage
 import com.github.csutorasa.wiclax.message.RaceStartMessage
@@ -18,8 +17,7 @@ import java.time.Instant
 class IntegrationSmokeTest extends Specification {
 
     PollingConditions conditions = new PollingConditions()
-    WiclaxProtocolOptions options = Options.options
-    WiclaxServerSocket wiclaxServerSocket = new WiclaxServerSocket(options)
+    WiclaxServerSocket wiclaxServerSocket = new WiclaxServerSocket(Options.options)
 
     @Ignore
     def "smoke test"() {
