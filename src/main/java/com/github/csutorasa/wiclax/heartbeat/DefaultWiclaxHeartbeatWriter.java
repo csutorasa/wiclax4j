@@ -7,10 +7,10 @@ import com.github.csutorasa.wiclax.message.MessageSender;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Default reader implementation. The socket is read until it is closed.
+ * Default heartbeat writer implementation.
  */
 @RequiredArgsConstructor
-public class DefaultWiclaxHeartbeatWriter implements WiclaxHeartbeatWriter {
+public class DefaultWiclaxHeartbeatWriter extends AbstractWiclaxHeartbeatWriter {
 
     private final long intervalMillis;
     private final ErrorHandler<Exception> unhandledSendingException;
@@ -61,7 +61,7 @@ public class DefaultWiclaxHeartbeatWriter implements WiclaxHeartbeatWriter {
 
     private void sendMessage(MessageSender messageSender) {
         try {
-            messageSender.send(new HeartBeatMessage());
+            sendHeartbeatMessage(messageSender);
         } catch (Exception e) {
             unhandledSendingException(e);
         }
