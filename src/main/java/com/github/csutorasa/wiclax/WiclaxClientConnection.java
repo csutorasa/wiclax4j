@@ -4,6 +4,7 @@ import com.github.csutorasa.wiclax.clock.WiclaxClock;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
 import com.github.csutorasa.wiclax.heartbeat.WiclaxHeartbeatWriter;
 import com.github.csutorasa.wiclax.message.WiclaxMessage;
+import com.github.csutorasa.wiclax.reader.WiclaxClientReader;
 import com.github.csutorasa.wiclax.response.WiclaxResponse;
 import lombok.Getter;
 
@@ -92,16 +93,16 @@ public class WiclaxClientConnection implements Closeable {
 
     /**
      * Sends message to Wiclax.
-     * This method is synchronized to the class, so messages from different threads will not conflict.
+     * This is a thread-safe method.
      *
      * @param message message to be sent
      * @throws IOException thrown if the underlying stream throws an exception
      */
-    public synchronized void send(WiclaxMessage message) throws IOException {
+    public void send(WiclaxMessage message) throws IOException {
         send(message.toData(protocolOptions));
     }
 
-    void send(WiclaxResponse response) throws IOException {
+    private void send(WiclaxResponse response) throws IOException {
         send(response.toData());
     }
 

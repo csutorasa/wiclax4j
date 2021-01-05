@@ -31,7 +31,7 @@ public class WiclaxServerSocket implements Closeable {
     }
 
     /**
-     * Creates a new server socket with the given port.
+     * Creates a new server socket with the given port and options.
      *
      * @param port            socket port
      * @param protocolOptions protocol options
@@ -42,7 +42,7 @@ public class WiclaxServerSocket implements Closeable {
     }
 
     /**
-     * Creates a new server socket from an existing socket.
+     * Creates a new server socket from an existing socket and options.
      *
      * @param serverSocket    existing socket
      * @param protocolOptions protocol options
@@ -64,7 +64,7 @@ public class WiclaxServerSocket implements Closeable {
     }
 
     /**
-     * Listens for a client and accepts it.
+     * Listens for a client and accepts it with a custom client connection generator.
      *
      * @param generator client connection generator
      * @return client connection

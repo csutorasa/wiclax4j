@@ -1,12 +1,12 @@
 package com.github.csutorasa.wiclax.smoke
 
-import com.github.csutorasa.wiclax.DefaultWiclaxClientReader
 import com.github.csutorasa.wiclax.WiclaxClientConnection
 import com.github.csutorasa.wiclax.WiclaxServerSocket
-import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriter
+import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriterThread
 import com.github.csutorasa.wiclax.message.AcquisitionMessage
 import com.github.csutorasa.wiclax.message.RaceStartMessage
 import com.github.csutorasa.wiclax.model.Acquisition
+import com.github.csutorasa.wiclax.reader.DefaultWiclaxClientReaderThread
 import com.github.csutorasa.wiclax.requesthandler.RewindHandler
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -26,8 +26,8 @@ class IntegrationSmokeTest extends Specification {
         RewindHandler rewindHandler = { from, to -> rewindCalls++ }
         WiclaxClientConnection connection = wiclaxServerSocket.accept()
         when:
-        connection.startReading(new DefaultWiclaxClientReader(rewindHandler))
-        connection.startHeartbeatWriting(new DefaultWiclaxHeartbeatWriter())
+        connection.startReading(new DefaultWiclaxClientReaderThread(rewindHandler))
+        connection.startHeartbeatWriting(new DefaultWiclaxHeartbeatWriterThread())
         then:
         conditions.within(60) {
             connection.readStarted

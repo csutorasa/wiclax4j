@@ -1,11 +1,10 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.reader;
 
+import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.request.RequestReader;
 import com.github.csutorasa.wiclax.requesthandler.StartReadHandler;
 import com.github.csutorasa.wiclax.requesthandler.StopReadHandler;
 import com.github.csutorasa.wiclax.response.ResponseSender;
-
-import java.time.Instant;
 
 /**
  * Base reader for a Wiclax client.
@@ -23,12 +22,4 @@ public interface WiclaxClientReader {
      */
     void startRead(WiclaxClientConnection clientConnection, RequestReader requestReader, ResponseSender responseSender,
                    StartReadHandler startReadHandler, StopReadHandler stopReadHandler);
-
-    /**
-     * Handles the rewind events. It should replay events between the period.
-     *
-     * @param from rewind from
-     * @param to   rewind to
-     */
-    void rewindHandler(Instant from, Instant to);
 }

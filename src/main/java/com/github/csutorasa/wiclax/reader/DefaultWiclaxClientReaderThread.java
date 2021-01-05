@@ -1,5 +1,6 @@
-package com.github.csutorasa.wiclax;
+package com.github.csutorasa.wiclax.reader;
 
+import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.exception.ErrorHandler;
 import com.github.csutorasa.wiclax.exception.UnhandledRequestException;
 import com.github.csutorasa.wiclax.exception.UnparseableRequestException;
@@ -11,18 +12,14 @@ import com.github.csutorasa.wiclax.requesthandler.StopReadHandler;
 import com.github.csutorasa.wiclax.requesthandler.WiclaxRequestHandlers;
 import com.github.csutorasa.wiclax.requestparser.WiclaxRequestParsers;
 import com.github.csutorasa.wiclax.response.ResponseSender;
-import lombok.RequiredArgsConstructor;
 
-import java.time.Instant;
 import java.util.function.Consumer;
 
 /**
- * Default reader implementation. The socket is read until it is closed.
+ * Default reader implementation with its own thread.
  */
-@RequiredArgsConstructor
-public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
+public class DefaultWiclaxClientReaderThread extends AbstractWiclaxClientReader {
 
-    private final RewindHandler rewindHandler;
     private final Consumer<String> unparseableRequest;
     private final Consumer<WiclaxRequest> unhandledRequest;
     private final ErrorHandler<Exception> unhandledRequestErrorHandler;
@@ -33,8 +30,8 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
      *
      * @param rewindHandler rewind request handler
      */
-    public DefaultWiclaxClientReader(RewindHandler rewindHandler) {
-        this.rewindHandler = rewindHandler;
+    public DefaultWiclaxClientReaderThread(RewindHandler rewindHandler) {
+        super(rewindHandler);
         unparseableRequest = request -> {
         };
         unhandledRequest = request -> {
@@ -42,6 +39,26 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
         unhandledRequestErrorHandler = exception -> {
         };
         threadException = ErrorHandler.rethrow();
+    }
+
+    /**
+     * Creates a new reader.
+     *
+     * @param rewindHandler                rewind request handler
+     * @param unparseableRequest           unparseable request handler
+     * @param unhandledRequest             unhandled request handler
+     * @param unhandledRequestErrorHandler unhandled request handler
+     * @param threadException              thread exception handler
+     */
+    public DefaultWiclaxClientReaderThread(RewindHandler rewindHandler, Consumer<String> unparseableRequest,
+                                           Consumer<WiclaxRequest> unhandledRequest,
+                                           ErrorHandler<Exception> unhandledRequestErrorHandler,
+                                           ErrorHandler<Throwable> threadException) {
+        super(rewindHandler);
+        this.unparseableRequest = unparseableRequest;
+        this.unhandledRequest = unhandledRequest;
+        this.unhandledRequestErrorHandler = unhandledRequestErrorHandler;
+        this.threadException = threadException;
     }
 
     @Override
@@ -87,50 +104,19 @@ public class DefaultWiclaxClientReader extends AbstractWiclaxClientReader {
         }
     }
 
-    /**
-     * Dispatches the rewind request.
-     *
-     * @param from rewind from
-     * @param to   rewind to
-     */
-    @Override
-    public void rewindHandler(Instant from, Instant to) {
-        rewindHandler.accept(from, to);
-    }
-
-    /**
-     * Dispatches the unparseable request exceptions.
-     *
-     * @param request request line
-     */
-    protected void unparseableRequest(String request) {
+    private void unparseableRequest(String request) {
         unparseableRequest.accept(request);
     }
 
-    /**
-     * Dispatches the unhandled request exceptions.
-     *
-     * @param request request
-     */
-    protected void unhandledRequest(WiclaxRequest request) {
+    private void unhandledRequest(WiclaxRequest request) {
         unhandledRequest.accept(request);
     }
 
-    /**
-     * Dispatches the unhandled processing exceptions.
-     *
-     * @param exception any exception that happened during request handling
-     */
-    protected void unhandledProcessingException(Exception exception) {
+    private void unhandledProcessingException(Exception exception) {
         unhandledRequestErrorHandler.handle(exception);
     }
 
-    /**
-     * Last chance to stop the reader thread from being stopped.
-     *
-     * @param throwable any exception thrown by the thread
-     */
-    protected void threadException(Throwable throwable) {
+    private void threadException(Throwable throwable) {
         threadException.handle(throwable);
     }
 }

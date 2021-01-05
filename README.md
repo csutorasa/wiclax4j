@@ -13,13 +13,13 @@ from [here](https://search.maven.org/artifact/com.github.csutorasa.wiclax4j/wicl
 ```java
 package org.example;
 
-import com.github.csutorasa.wiclax.DefaultWiclaxClientReader;
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
 import com.github.csutorasa.wiclax.WiclaxServerSocketTest;
 import com.github.csutorasa.wiclax.config.WiclaxProtocolOptions;
-import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriter;
+import com.github.csutorasa.wiclax.heartbeat.DefaultWiclaxHeartbeatWriterThread;
 import com.github.csutorasa.wiclax.message.AcquisitionMessage;
 import com.github.csutorasa.wiclax.model.Acquisition;
+import com.github.csutorasa.wiclax.reader.DefaultWiclaxClientReaderThread;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -33,9 +33,9 @@ public class WiclaxExample {
         // Accept a client connection
         WiclaxClientConnection connection = wiclaxServerSocket.accept();
         // Start reading requests from the client
-        connection.startReading(new DefaultWiclaxClientReader(WiclaxExample::rewind));
+        connection.startReading(new DefaultWiclaxClientReaderThread(WiclaxExample::rewind));
         // Start writing heartbeat messages
-        connection.startHeartbeatWriting(new DefaultWiclaxHeartbeatWriter());
+        connection.startHeartbeatWriting(new DefaultWiclaxHeartbeatWriterThread());
         // Send an acquisition
         Acquisition acquisition = Acquisition.builder().deviceId("301").chipId("123").detectionTime(Instant.now()).build();
         connection.send(new AcquisitionMessage(acquisition));
@@ -60,8 +60,9 @@ and [custom protocol options and configuration](docs/acquisitiontype.md).
 ### Reader
 
 To read from clients you can use any implementation
-of [WiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/WiclaxClientReader.java). There is a default
-implementation [DefaultWiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/DefaultWiclaxClientReader.java),
+of [WiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/reader/WiclaxClientReader.java). There is a default
+implementation [DefaultWiclaxClientReader](src/main/java/com/github/csutorasa/wiclax/reader/DefaultWiclaxClientReader.java)
+and a [DefaultWiclaxClientReaderThread](src/main/java/com/github/csutorasa/wiclax/reader/DefaultWiclaxClientReaderThread.java),
 but you can customize it by handling the errors correctly. As there are no dependencies, there are no logging is
 included in the project.
 

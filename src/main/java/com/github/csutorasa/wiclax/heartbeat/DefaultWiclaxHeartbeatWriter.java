@@ -1,87 +1,28 @@
 package com.github.csutorasa.wiclax.heartbeat;
 
 import com.github.csutorasa.wiclax.WiclaxClientConnection;
-import com.github.csutorasa.wiclax.exception.ErrorHandler;
-import com.github.csutorasa.wiclax.message.HeartBeatMessage;
 import com.github.csutorasa.wiclax.message.MessageSender;
-import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
 
 /**
- * Default heartbeat writer implementation.
+ * Default heartbeat writer.
  */
-@RequiredArgsConstructor
 public class DefaultWiclaxHeartbeatWriter extends AbstractWiclaxHeartbeatWriter {
 
-    private final long intervalMillis;
-    private final ErrorHandler<Exception> unhandledSendingException;
-    private final ErrorHandler<Throwable> threadException;
-
-    /**
-     * Creates a new writer.
-     */
-    public DefaultWiclaxHeartbeatWriter() {
-        this(5000);
-    }
-
-    /**
-     * Creates a new writer with custom interval.
-     *
-     * @param intervalMillis interval between heartbeats in milliseconds
-     */
-    public DefaultWiclaxHeartbeatWriter(long intervalMillis) {
-        this.intervalMillis = intervalMillis;
-        unhandledSendingException = (exception) -> {
-        };
-        threadException = ErrorHandler.rethrow();
-    }
+    private MessageSender messageSender;
 
     @Override
     public void startWrite(WiclaxClientConnection clientConnection, MessageSender messageSender) {
-        Thread writerThread = new Thread(() -> writer(messageSender));
-        writerThread.setName("Wiclax heartbeat writer for " + clientConnection.getRemoteSocketAddress().toString());
-        writerThread.start();
-    }
-
-    private void writer(MessageSender messageSender) {
-        boolean exit = false;
-        while (!exit) {
-            exit = send(messageSender);
-        }
-    }
-
-    private boolean send(MessageSender messageSender) {
-        try {
-            sendMessage(messageSender);
-            Thread.sleep(intervalMillis);
-        } catch (Throwable t) {
-            threadException(t);
-        }
-        return false;
-    }
-
-    private void sendMessage(MessageSender messageSender) {
-        try {
-            sendHeartbeatMessage(messageSender);
-        } catch (Exception e) {
-            unhandledSendingException(e);
-        }
+        this.messageSender = messageSender;
     }
 
     /**
-     * Dispatches the unhandled sending exceptions.
+     * Sends a heartbeat message.
      *
-     * @param exception any exception that happened during message sending
+     * @throws IOException if the sending throws an exception
      */
-    protected void unhandledSendingException(Exception exception) {
-        unhandledSendingException.handle(exception);
-    }
-
-    /**
-     * Last chance to stop the reader thread from being stopped.
-     *
-     * @param throwable any exception thrown by the thread
-     */
-    protected void threadException(Throwable throwable) {
-        threadException.handle(throwable);
+    public void send() throws IOException {
+        sendHeartbeatMessage(messageSender);
     }
 }

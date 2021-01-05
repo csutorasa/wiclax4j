@@ -1,8 +1,9 @@
-package com.github.csutorasa.wiclax
+package com.github.csutorasa.wiclax.reader
 
 import com.github.csutorasa.wiclax.exception.ErrorHandler
 import com.github.csutorasa.wiclax.exception.UnhandledRequestException
 import com.github.csutorasa.wiclax.exception.UnparseableRequestException
+import com.github.csutorasa.wiclax.reader.DefaultWiclaxClientReaderThread
 import com.github.csutorasa.wiclax.request.RequestReader
 import com.github.csutorasa.wiclax.request.WiclaxRequest
 import com.github.csutorasa.wiclax.requesthandler.WiclaxRequestHandlers
@@ -13,7 +14,7 @@ import spock.lang.Specification
 
 import java.util.function.Consumer
 
-class DefaultWiclaxClientReaderTest extends Specification {
+class DefaultWiclaxClientReaderThreadTest extends Specification {
 
     WiclaxRequestHandlers handlers = Mock()
     WiclaxRequestParsers parsers = Mock()
@@ -24,7 +25,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         given:
         String requestLine = "test request"
         WiclaxRequest request = new WiclaxRequest() {}
-        def reader = new DefaultWiclaxClientReader(null)
+        def reader = new DefaultWiclaxClientReaderThread(null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
@@ -38,7 +39,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         String requestLine = "test request"
         WiclaxRequest request = new WiclaxRequest() {}
         WiclaxResponse response = dummyResponse()
-        def reader = new DefaultWiclaxClientReader(null)
+        def reader = new DefaultWiclaxClientReaderThread(null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
@@ -54,7 +55,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         WiclaxRequest request = new WiclaxRequest() {}
         Exception exception = new UnhandledRequestException(request)
         Consumer<WiclaxRequest> handler = Mock()
-        def reader = new DefaultWiclaxClientReader(null, null, handler, null, null)
+        def reader = new DefaultWiclaxClientReaderThread(null, null, handler, null, null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
@@ -72,7 +73,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         WiclaxRequest request = new WiclaxRequest() {}
         Exception exception = new RuntimeException("test")
         ErrorHandler<Exception> handler = Mock()
-        def reader = new DefaultWiclaxClientReader(null, null, null, handler, null)
+        def reader = new DefaultWiclaxClientReaderThread(null, null, null, handler, null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
@@ -89,7 +90,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         String requestLine = "test request"
         Exception exception = new UnparseableRequestException(requestLine)
         Consumer<String> handler = Mock()
-        def reader = new DefaultWiclaxClientReader(null, handler, null, null, null)
+        def reader = new DefaultWiclaxClientReaderThread(null, handler, null, null, null)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
@@ -104,7 +105,7 @@ class DefaultWiclaxClientReaderTest extends Specification {
         given:
         Exception exception = new RuntimeException("test error")
         ErrorHandler<Throwable> handler = Mock()
-        def reader = new DefaultWiclaxClientReader(null, null, null, ErrorHandler.rethrow(), handler)
+        def reader = new DefaultWiclaxClientReaderThread(null, null, null, ErrorHandler.rethrow(), handler)
         when:
         reader.readAndProcess(handlers, parsers, requestReader, responseSender)
         then:
