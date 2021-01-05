@@ -28,4 +28,38 @@ public interface ErrorHandler<T extends Throwable> {
             throw new RuntimeException(t);
         };
     }
+
+    /**
+     * Runs a task, that can throw any exceptions, which will be handled by the error handler.
+     *
+     * @param supplier     supplier logic
+     * @param errorHandler error handling logic
+     * @param defaultValue default value to return if the error handling logic does not (re)throw an exception
+     * @param <R> result type
+     * @return result from the supplier
+     */
+    static <R> R runWithHandler(ThrowingSupplier<R> supplier, ErrorHandler<Throwable> errorHandler, R defaultValue) {
+        try {
+            return supplier.get();
+        } catch (Throwable t) {
+            errorHandler.handle(t);
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Interface that can get a value and throw any exceptions.
+     *
+     * @param <T> result type
+     */
+    @FunctionalInterface
+    interface ThrowingSupplier<T> {
+        /**
+         * Gets a value and can throw any exceptions.
+         *
+         * @return value
+         * @throws Throwable any exception
+         */
+        T get() throws Throwable;
+    }
 }

@@ -77,46 +77,22 @@ public class DefaultWiclaxClientReaderThread extends AbstractWiclaxClientReader 
                         RequestReader requestReader, ResponseSender responseSender) {
         boolean exit = false;
         while (!exit) {
-            exit = readAndProcess(requestHandlers, requestParsers, requestReader, responseSender);
+            exit = ErrorHandler.runWithHandler(() ->
+                    processRequest(requestHandlers, requestParsers, requestReader, responseSender), threadException, false);
         }
     }
 
-    private boolean readAndProcess(WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
-                                   RequestReader requestReader, ResponseSender responseSender) {
-        try {
-            processRequest(requestHandlers, requestParsers, requestReader, responseSender);
-        } catch (Throwable t) {
-            threadException(t);
-        }
-        return false;
-    }
-
-    private void processRequest(WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
+    private boolean processRequest(WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
                                 RequestReader requestReader, ResponseSender responseSender) {
         try {
-            readAndProcessRequest(requestHandlers, requestParsers, requestReader, responseSender);
+            return readAndProcessRequest(requestHandlers, requestParsers, requestReader, responseSender);
         } catch (UnparseableRequestException e) {
-            unparseableRequest(e.getRequestLine());
+            unparseableRequest.accept(e.getRequestLine());
         } catch (UnhandledRequestException e) {
-            unhandledRequest(e.getRequest());
+            unhandledRequest.accept(e.getRequest());
         } catch (Exception e) {
-            unhandledProcessingException(e);
+            unhandledRequestErrorHandler.handle(e);
         }
-    }
-
-    private void unparseableRequest(String request) {
-        unparseableRequest.accept(request);
-    }
-
-    private void unhandledRequest(WiclaxRequest request) {
-        unhandledRequest.accept(request);
-    }
-
-    private void unhandledProcessingException(Exception exception) {
-        unhandledRequestErrorHandler.handle(exception);
-    }
-
-    private void threadException(Throwable throwable) {
-        threadException.handle(throwable);
+        return false;
     }
 }

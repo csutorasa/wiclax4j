@@ -63,17 +63,20 @@ public abstract class AbstractWiclaxClientReader implements WiclaxClientReader {
      * @param requestParsers  request parsers
      * @param requestReader   request reader logic
      * @param responseSender  response sender logic
+     * @return true if request was read
      * @throws UnparseableRequestException if no parser supports the request
      * @throws UnhandledRequestException   if no handler supports the request
      * @throws IOException                 if sending the response fails
      */
-    protected void readAndProcessRequest(WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
+    protected boolean readAndProcessRequest(WiclaxRequestHandlers requestHandlers, WiclaxRequestParsers requestParsers,
                                          RequestReader requestReader, ResponseSender responseSender)
             throws UnparseableRequestException, UnhandledRequestException, IOException {
         WiclaxRequest request = read(requestParsers, requestReader);
         if (request != null) {
             processAndRespond(requestHandlers, responseSender, request);
+            return true;
         }
+        return false;
     }
 
     /**

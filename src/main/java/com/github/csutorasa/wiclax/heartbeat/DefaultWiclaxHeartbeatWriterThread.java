@@ -44,33 +44,17 @@ public class DefaultWiclaxHeartbeatWriterThread extends AbstractWiclaxHeartbeatW
     private void writer(MessageSender messageSender) {
         boolean exit = false;
         while (!exit) {
-            exit = send(messageSender);
+            exit = ErrorHandler.runWithHandler(() -> send(messageSender), threadException, false);
         }
     }
 
-    private boolean send(MessageSender messageSender) {
-        try {
-            sendMessage(messageSender);
-            Thread.sleep(intervalMillis);
-        } catch (Throwable t) {
-            threadException(t);
-        }
-        return false;
-    }
-
-    private void sendMessage(MessageSender messageSender) {
+    private boolean send(MessageSender messageSender) throws InterruptedException {
         try {
             sendHeartbeatMessage(messageSender);
         } catch (Exception e) {
-            unhandledSendingException(e);
+            unhandledSendingException.handle(e);
         }
-    }
-
-    private void unhandledSendingException(Exception exception) {
-        unhandledSendingException.handle(exception);
-    }
-
-    private void threadException(Throwable throwable) {
-        threadException.handle(throwable);
+        Thread.sleep(intervalMillis);
+        return false;
     }
 }

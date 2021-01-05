@@ -27,7 +27,7 @@ class DefaultWiclaxClientReaderThreadTest extends Specification {
         WiclaxRequest request = new WiclaxRequest() {}
         def reader = new DefaultWiclaxClientReaderThread(null)
         when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
+        reader.processRequest(handlers, parsers, requestReader, responseSender)
         then:
         1 * requestReader.readRequest() >> requestLine
         1 * parsers.parse(requestLine) >> request
@@ -41,7 +41,7 @@ class DefaultWiclaxClientReaderThreadTest extends Specification {
         WiclaxResponse response = dummyResponse()
         def reader = new DefaultWiclaxClientReaderThread(null)
         when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
+        reader.processRequest(handlers, parsers, requestReader, responseSender)
         then:
         1 * requestReader.readRequest() >> requestLine
         1 * parsers.parse(requestLine) >> request
@@ -57,7 +57,7 @@ class DefaultWiclaxClientReaderThreadTest extends Specification {
         Consumer<WiclaxRequest> handler = Mock()
         def reader = new DefaultWiclaxClientReaderThread(null, null, handler, null, null)
         when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
+        reader.processRequest(handlers, parsers, requestReader, responseSender)
         then:
         1 * requestReader.readRequest() >> requestLine
         1 * parsers.parse(requestLine) >> request
@@ -75,7 +75,7 @@ class DefaultWiclaxClientReaderThreadTest extends Specification {
         ErrorHandler<Exception> handler = Mock()
         def reader = new DefaultWiclaxClientReaderThread(null, null, null, handler, null)
         when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
+        reader.processRequest(handlers, parsers, requestReader, responseSender)
         then:
         1 * requestReader.readRequest() >> requestLine
         1 * parsers.parse(requestLine) >> request
@@ -92,27 +92,13 @@ class DefaultWiclaxClientReaderThreadTest extends Specification {
         Consumer<String> handler = Mock()
         def reader = new DefaultWiclaxClientReaderThread(null, handler, null, null, null)
         when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
+        reader.processRequest(handlers, parsers, requestReader, responseSender)
         then:
         1 * requestReader.readRequest() >> requestLine
         1 * parsers.parse(requestLine) >> {
             throw exception
         }
         1 * handler.accept(requestLine)
-    }
-
-    def "thread message exception handling works"() {
-        given:
-        Exception exception = new RuntimeException("test error")
-        ErrorHandler<Throwable> handler = Mock()
-        def reader = new DefaultWiclaxClientReaderThread(null, null, null, ErrorHandler.rethrow(), handler)
-        when:
-        reader.readAndProcess(handlers, parsers, requestReader, responseSender)
-        then:
-        1 * requestReader.readRequest() >> {
-            throw exception
-        }
-        1 * handler.handle(exception)
     }
 
     def dummyResponse(String data = "") {

@@ -21,21 +21,6 @@ class DefaultWiclaxHeartbeatWriterThreadTest extends Specification {
         }
     }
 
-    def "thread message exception handling works"() {
-        given:
-        ErrorHandler<Throwable> handler = Mock()
-        Exception exception = new RuntimeException("test error")
-        def writer = new DefaultWiclaxHeartbeatWriterThread(5000, ErrorHandler.rethrow(), handler)
-        when:
-        writer.send(messageSender)
-        then:
-        1 * messageSender.send(_) >> { WiclaxMessage message ->
-            assert message instanceof HeartBeatMessage
-            throw exception
-        }
-        1 * handler.handle(exception)
-    }
-
     def "sending message exception handling works"() {
         given:
         ErrorHandler<Exception> handler = Mock()
