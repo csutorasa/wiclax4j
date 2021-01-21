@@ -3,6 +3,8 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'signing'
+    id 'jacoco'
+    id "org.sonarqube" version "3.0"
 }
 
 java {
@@ -78,3 +80,21 @@ publishing {
 signing {
     sign publishing.publications.mavenJava
 }
+
+jacoco {
+    toolVersion = "0.8.6"
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.organization", "csutorasa"
+        property "sonar.login", System.getenv("SONAR_TOKEN")
+        property "sonar.sourceEncoding", "UTF-8"
+    }
+}
+project.tasks["sonarqube"].dependsOn "jacocoTestReport"

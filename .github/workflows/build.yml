@@ -26,6 +26,8 @@ jobs:
         with:
           name: test-results
           path: build/reports/tests
+      - name: Run static analysis
+        run: ./gradlew sonarqube --info --stacktrace --build-cache --no-daemon
       - name: Upload JAR
         uses: actions/upload-artifact@v2
         with:
