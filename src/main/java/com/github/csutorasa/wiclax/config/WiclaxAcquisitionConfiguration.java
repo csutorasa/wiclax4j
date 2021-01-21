@@ -131,6 +131,8 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
         transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         transformerFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         transformerFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        transformerFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        transformerFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         Transformer transformer = transformerFactory.newTransformer();
         transformer.transform(new DOMSource(document), new StreamResult(writer));
     }
