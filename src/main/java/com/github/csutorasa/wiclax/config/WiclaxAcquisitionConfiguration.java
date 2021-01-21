@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -94,6 +95,7 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
      */
     public void writeTo(OutputStreamWriter writer) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         document.setXmlVersion("1.0");
@@ -124,6 +126,7 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
         }
 
         TransformerFactory tf = TransformerFactory.newInstance();
+        tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         Transformer transformer = tf.newTransformer();
         transformer.transform(new DOMSource(document), new StreamResult(writer));
     }
