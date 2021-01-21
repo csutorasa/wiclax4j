@@ -96,6 +96,8 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
     public void writeTo(OutputStreamWriter writer) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         document.setXmlVersion("1.0");
@@ -125,9 +127,11 @@ public class WiclaxAcquisitionConfiguration extends WiclaxProtocolOptions {
             acquisition.appendChild(iconElement);
         }
 
-        TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        Transformer transformer = tf.newTransformer();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        transformerFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        transformerFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        Transformer transformer = transformerFactory.newTransformer();
         transformer.transform(new DOMSource(document), new StreamResult(writer));
     }
 
