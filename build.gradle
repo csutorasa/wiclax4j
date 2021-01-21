@@ -96,7 +96,7 @@ sonarqube {
     properties {
         property 'sonar.host.url', 'https://sonarcloud.io'
         property 'sonar.organization', 'csutorasa'
-        property 'sonar.branch', 'master'
+        property 'sonar.branch.name', 'master'
         property 'sonar.login', System.getenv('SONAR_TOKEN')
         property 'sonar.sourceEncoding', 'UTF-8'
     }
