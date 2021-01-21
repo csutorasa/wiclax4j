@@ -87,6 +87,9 @@ jacoco {
 
 jacocoTestReport {
     dependsOn test
+    reports {
+        xml.enabled true
+    }
 }
 
 sonarqube {
