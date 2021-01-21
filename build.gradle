@@ -94,10 +94,11 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.organization", "csutorasa"
-        property "sonar.login", System.getenv("SONAR_TOKEN")
-        property "sonar.sourceEncoding", "UTF-8"
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'csutorasa'
+        property 'sonar.branch', 'master'
+        property 'sonar.login', System.getenv('SONAR_TOKEN')
+        property 'sonar.sourceEncoding', 'UTF-8'
     }
 }
-project.tasks["sonarqube"].dependsOn "jacocoTestReport"
+project.tasks['sonarqube'].dependsOn 'jacocoTestReport'
