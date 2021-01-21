@@ -1,5 +1,8 @@
 package com.github.csutorasa.wiclax.formatter;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -7,6 +10,7 @@ import java.util.Locale;
 /**
  * Collection of common Date formatters.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WiclaxDateFormatters {
     /**
      * Date and time formatter. Example: 12-31-2020 23:59:59

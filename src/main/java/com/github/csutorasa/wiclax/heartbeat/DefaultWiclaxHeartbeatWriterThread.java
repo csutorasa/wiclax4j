@@ -29,7 +29,7 @@ public class DefaultWiclaxHeartbeatWriterThread extends AbstractWiclaxHeartbeatW
      */
     public DefaultWiclaxHeartbeatWriterThread(long intervalMillis) {
         this.intervalMillis = intervalMillis;
-        unhandledSendingException = (exception) -> {
+        unhandledSendingException = exception -> {
         };
         threadException = ErrorHandler.rethrow();
     }

@@ -21,7 +21,7 @@ public interface ErrorHandler<T extends Throwable> {
      * @return error handler
      */
     static <T extends Throwable> ErrorHandler<T> rethrow() {
-        return (t) -> {
+        return t -> {
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
             }
