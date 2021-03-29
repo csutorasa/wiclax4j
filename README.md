@@ -1,4 +1,4 @@
-# Wiclax4j ![Build wiclax4j](https://github.com/csutorasa/wiclax4j/workflows/Build%20wiclax4j/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/com.github.csutorasa.wiclax4j/wiclax4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.csutorasa.wiclax4j%22%20AND%20a:%22wiclax4j%22)
+# Wiclax4j ![Build wiclax4j](https://github.com/csutorasa/wiclax4j/workflows/Build%20wiclax4j/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/com.github.csutorasa.wiclax4j/wiclax4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.csutorasa.wiclax4j%22%20AND%20a:%22wiclax4j%22) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wiclax4j&metric=alert_status)](https://sonarcloud.io/dashboard?id=wiclax4j)
 
 This is a pure java implementation to create a generic acquisition [Wiclax](https://www.wiclax.com/) server. It has no
 runtime dependencies and is built with Java 8.
