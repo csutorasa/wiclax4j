@@ -29,11 +29,13 @@ jobs:
           name: test-results
           path: build/reports/tests
       - name: Run static analysis
+        if: github.ref == 'refs/heads/master'
         run: ./gradlew sonarqube --info --stacktrace --console=plain --build-cache --no-daemon
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Upload JAR
+        if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v2
         with:
           name: wiclax4j
