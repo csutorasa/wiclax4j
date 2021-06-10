@@ -7,6 +7,8 @@ plugins {
     id "org.sonarqube" version "3.2.0"
 }
 
+version = findProperty('wiclax4j.version')
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -18,11 +20,15 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
-    testImplementation 'org.codehaus.groovy:groovy-all:2.5.14'
+    
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
     testImplementation 'net.bytebuddy:byte-buddy:1.11.1'
     testImplementation 'org.objenesis:objenesis:3.2'
@@ -52,7 +58,7 @@ publishing {
             pom {
                 name = 'Wiclax4j'
                 description = 'This is a pure java generic acquisition Wiclax server implementation'
-                url = 'https://www.github.com/'
+                url = 'https://www.github.com/csutorasa/wiclax4j'
                 licenses {
                     license {
                         name = 'The MIT License'
