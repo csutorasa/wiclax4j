@@ -94,7 +94,7 @@ jacoco {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.enabled true
+        xml.required.set(true)
     }
 }
 
