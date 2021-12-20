@@ -26,15 +26,12 @@ test {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
     
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.9'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-    testImplementation 'net.bytebuddy:byte-buddy:1.12.2'
+    testImplementation 'net.bytebuddy:byte-buddy:1.12.5'
     testImplementation 'org.objenesis:objenesis:3.2'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 publishing {
@@ -88,7 +85,7 @@ signing {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
