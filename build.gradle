@@ -25,7 +25,7 @@ test {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
