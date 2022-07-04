@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: ./gradlew test --info --stacktrace --console=plain --build-cache --no-daemon
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         continue-on-error: true
         with:
