@@ -30,7 +30,7 @@ dependencies {
     
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.12'
     testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
-    testImplementation 'net.bytebuddy:byte-buddy:1.12.16'
+    testImplementation 'net.bytebuddy:byte-buddy:1.12.17'
     testImplementation 'org.objenesis:objenesis:3.3'
 }
 
