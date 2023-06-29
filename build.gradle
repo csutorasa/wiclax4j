@@ -28,7 +28,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.17'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.18'
     testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
     testImplementation 'net.bytebuddy:byte-buddy:1.14.5'
     testImplementation 'org.objenesis:objenesis:3.3'
