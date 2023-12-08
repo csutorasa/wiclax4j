@@ -22,7 +22,7 @@ jobs:
       - name: Build JAR
         run: ./gradlew jar --info --stacktrace --console=plain --build-cache --no-daemon
       - name: Run tests
-        run: ./gradlew test --info --stacktrace --console=plain --build-cache --no-daemon
+        run: ./gradlew test jacocoTestReport --info --stacktrace --console=plain --build-cache --no-daemon
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()

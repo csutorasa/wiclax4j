@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("jacoco")
-    id("org.sonarqube").version("4.4.0.3356")
+    id("org.sonarqube").version("4.4.1.3373")
 }
 
 version = project.properties["wiclax4j.version"] as String
@@ -28,9 +28,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 
-    testImplementation("org.apache.groovy:groovy-all:4.0.15")
+    testImplementation("org.apache.groovy:groovy-all:4.0.16")
     testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
-    testImplementation("net.bytebuddy:byte-buddy:1.14.9")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.10")
     testImplementation("org.objenesis:objenesis:3.3")
 }
 
@@ -53,27 +53,27 @@ publishing {
             from(components["java"])
 
             pom {
-                name = "Wiclax4j"
-                description = "This is a pure java generic acquisition Wiclax server implementation"
-                url = "https://www.github.com/csutorasa/wiclax4j"
+                name.set("Wiclax4j")
+                description.set("This is a pure java generic acquisition Wiclax server implementation")
+                url.set("https://www.github.com/csutorasa/wiclax4j")
                 licenses {
                     license {
-                        name = "The MIT License"
-                        url = "https://opensource.org/licenses/MIT"
+                        name.set("The MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
                     }
                 }
                 developers {
                     developer {
-                        id = "csutorasa"
-                        name = "Ármin Csutorás"
-                        email = "csutorasa@gmail.com"
-                        organizationUrl = "https://github.com/csutorasa"
+                        id.set("csutorasa")
+                        name.set("Ármin Csutorás")
+                        email.set("csutorasa@gmail.com")
+                        organizationUrl.set("https://github.com/csutorasa")
                     }
                 }
                 scm {
-                    connection = "https://github.com/csutorasa/wiclax4j.git"
-                    developerConnection = "https://github.com/csutorasa/wiclax4j.git"
-                    url = "https://github.com/csutorasa/wiclax4j"
+                    connection.set("https://github.com/csutorasa/wiclax4j.git")
+                    developerConnection.set("https://github.com/csutorasa/wiclax4j.git")
+                    url.set("https://github.com/csutorasa/wiclax4j")
                 }
             }
         }
@@ -85,7 +85,7 @@ signing {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.11"
 }
 
 tasks.jacocoTestReport {
@@ -95,6 +95,10 @@ tasks.jacocoTestReport {
     }
 }
 
+tasks.sonarqube {
+    dependsOn(tasks.jacocoTestReport)
+}
+
 sonarqube {
     properties {
         property("sonar.host.url", "https://sonarcloud.io")
@@ -102,6 +106,6 @@ sonarqube {
         property("sonar.branch.name", "master")
         property("sonar.login", System.getenv("SONAR_TOKEN"))
         property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.gradle.skipCompile", "true")
     }
 }
-project.tasks["sonarqube"].dependsOn "jacocoTestReport"
