@@ -30,7 +30,7 @@ dependencies {
 
     testImplementation("org.apache.groovy:groovy-all:4.0.17")
     testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
-    testImplementation("net.bytebuddy:byte-buddy:1.14.10")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.11")
     testImplementation("org.objenesis:objenesis:3.3")
 }
 
