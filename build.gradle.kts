@@ -25,8 +25,8 @@ tasks.test {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.32")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
 
     testImplementation("org.apache.groovy:groovy-all:4.0.23")
     testImplementation("org.spockframework:spock-core:2.3-groovy-4.0")
